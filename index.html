@@ -1214,7 +1214,6 @@ function renderDashboard() {
         <div class="next-up-item">
           <span class="area-tag">${t.areaName}</span>
           <span>${t.name}</span>
-          ${t.estDays ? `<span style="color:var(--text-light);font-size:12px">(~${t.estDays} days)</span>` : ''}
         </div>
       `).join('') : '<div style="color:var(--text-light);font-size:14px">All tasks are either completed or blocked. Check the Decisions tab.</div>'}
     </div>
@@ -1549,14 +1548,6 @@ function renderArea(area) {
           ).join('')}
         </select>
       </div>
-      <div class="form-group" style="max-width:140px">
-        <label>Est. Days</label>
-        <input value="${esc(area.estDays)}" onchange="updateArea('${area.id}','estDays',this.value)">
-      </div>
-      <div class="form-group" style="max-width:140px">
-        <label>Actual Days</label>
-        <input value="${esc(area.actualDays)}" onchange="updateArea('${area.id}','actualDays',this.value)">
-      </div>
       <div class="form-group" style="max-width:160px">
         <label>Assigned To</label>
         <select onchange="updateArea('${area.id}','assignedTo',this.value)">
@@ -1658,7 +1649,6 @@ function renderArea(area) {
                     `<option value="${s}" ${t.status===s?'selected':''}>${statusLabel(s)}</option>`
                   ).join('')}
                 </select>
-                <input placeholder="Est. days" value="${esc(t.estDays)}" style="width:70px" onchange="updateTask('${area.id}',${ti},'estDays',this.value)">
                 <input type="date" value="${t.targetDate||''}" style="width:130px" onchange="updateTask('${area.id}',${ti},'targetDate',this.value)">
                 ${blocked ? blockedBy.map(b => `<span class="dep-tag">blocked by: ${esc(b)}</span>`).join('') : ''}
                 ${t.deps.length && !blocked ? `<span style="font-size:11px;color:var(--accent)">deps met</span>` : ''}
@@ -2111,12 +2101,11 @@ function renderNotes() {
 // ---- Timeline ----
 function renderTimeline() {
   const phases = [
-    { name: 'Finalize Decisions', areaId: null, status: getPendingDecisions().length === 0 ? 'completed' : (data.decisions.some(d => d.status === 'researching') ? 'in-progress' : 'not-started'), est: '1-2 weeks', deps: [] },
+    { name: 'Finalize Decisions', areaId: null, status: getPendingDecisions().length === 0 ? 'completed' : (data.decisions.some(d => d.status === 'researching') ? 'in-progress' : 'not-started'), deps: [] },
     ...data.areas.map(a => ({
       name: a.name,
       areaId: a.id,
       status: a.status,
-      est: a.estDays ? a.estDays + ' days' : 'TBD',
       deps: getDepsForArea(a.id)
     }))
   ];
@@ -2132,24 +2121,19 @@ function renderTimeline() {
     if (!sorted.includes(p)) sorted.push(p);
   });
 
-  const maxBar = 14;
-
   return `
     <h2 style="font-size:18px;margin-bottom:16px">Project Timeline</h2>
-    <p style="color:var(--text-light);font-size:13px;margin-bottom:20px">Approximate sequencing. Bars show relative estimated duration.</p>
+    <p style="color:var(--text-light);font-size:13px;margin-bottom:20px">Project sequencing and status at a glance.</p>
     <div class="timeline-container">
       ${sorted.map(p => {
-        const days = parseEstDays(p.est);
-        const barWidth = Math.max(15, Math.min(100, (days / maxBar) * 100));
         const deps = p.deps.length ? p.deps.join(', ') : '';
         return `
         <div class="timeline-bar-wrap" ${p.areaId ? `onclick="switchTab('${p.areaId}')" style="cursor:pointer"` : ''}>
           <div class="timeline-label">
             <span class="name">${p.name}</span>
-            <span class="dur">${p.est}</span>
           </div>
           ${deps ? `<div class="timeline-deps">Depends on: ${deps}</div>` : ''}
-          <div class="timeline-bar status-${p.status}" style="width:${barWidth}%">
+          <div class="timeline-bar status-${p.status}" style="width:100%">
             ${statusLabel(p.status)}
           </div>
         </div>`;
