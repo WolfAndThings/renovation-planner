@@ -2116,11 +2116,8 @@ function renderTimeline() {
     { phase: 'Decide', title: 'Finalize deck repair scope', sub: 'Which boards, rails, what gets replaced vs patched', taskIds: ['deck-assess', 'deck-scope'], decIds: ['d7'], type: 'decide' },
     { phase: 'Decide', title: 'Confirm contractor scope', sub: 'What they handle (roof/siding/gutters) vs what you do', taskIds: [], decIds: ['d8'], type: 'decide' },
 
-    // PHASE 2: SHOPPING
-    { phase: 'Buy', title: 'Mark paint & sprayer equipment to buy', sub: 'Sprayer, ladder, primer, paint, masking, drop cloths', taskIds: [], decIds: [], type: 'buy', area: 'soffits' },
-    { phase: 'Buy', title: 'Build eyebrow awning materials list', sub: 'Lumber, brackets, lag bolts, flashing, stain', taskIds: [], decIds: [], type: 'buy', area: 'awning' },
-    { phase: 'Buy', title: 'Build deck repair materials list', sub: 'Boards, screws, stain, cleaner, sealer', taskIds: [], decIds: [], type: 'buy', area: 'deck' },
-    { phase: 'Buy', title: 'Buy all materials — Menards run', sub: 'One big trip. Check Shopping List tab for the full list.', taskIds: [], decIds: [], type: 'buy', link: 'shopping' },
+    // PHASE 2: SHOPPING — one trip
+    { phase: 'Buy', title: 'Menards run — buy everything at once', sub: 'All soffit, awning, and deck materials in one trip. Check Shopping List tab.', taskIds: [], decIds: [], type: 'buy', link: 'shopping' },
 
     // PHASE 3: DIY WORK
     { phase: 'Build', title: 'Prep soffits', sub: 'Clean with TSP, sand, caulk gaps, mask everything', taskIds: ['soffit-prep'], decIds: [], type: 'build' },
