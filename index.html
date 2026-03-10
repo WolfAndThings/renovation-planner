@@ -337,37 +337,39 @@ body {
 .decision-name { font-weight: 600; font-size: 15px; }
 
 /* Timeline */
-.timeline-container { padding: 10px 0; }
-.timeline-bar-wrap { margin-bottom: 8px; }
-.timeline-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  margin-bottom: 4px;
+/* Step timeline */
+.steps { position: relative; padding-left: 32px; }
+.steps::before { content: ''; position: absolute; left: 13px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.step { position: relative; padding: 0 0 20px 16px; }
+.step:last-child { padding-bottom: 0; }
+.step-dot {
+  position: absolute; left: -25px; top: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--border); background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; z-index: 1;
 }
-.timeline-label .name { font-weight: 500; }
-.timeline-label .dur { color: var(--text-light); font-size: 12px; }
-.timeline-bar {
-  height: 28px;
-  border-radius: var(--radius-sm);
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  color: white;
-  overflow: hidden;
+.step.done .step-dot { background: var(--accent); border-color: var(--accent); }
+.step.done .step-dot::after { content: '✓'; color: #fff; font-weight: 700; }
+.step.active .step-dot { background: var(--progress); border-color: var(--progress); box-shadow: 0 0 0 4px rgba(232,168,56,0.2); }
+.step.active .step-dot::after { content: ''; width: 6px; height: 6px; background: #fff; border-radius: 50%; }
+.step.blocked .step-dot { background: var(--blocked); border-color: var(--blocked); }
+.step.blocked .step-dot::after { content: '!'; color: #fff; font-weight: 700; }
+.step-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.step.done .step-title { color: var(--accent); text-decoration: line-through; opacity: 0.7; }
+.step.blocked .step-title { color: var(--blocked); }
+.step-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.step-arrow { color: var(--border); font-size: 11px; padding: 4px 0 4px 0; letter-spacing: 2px; }
+.step-phase {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--accent); background: var(--accent-light);
+  display: inline-block; padding: 3px 10px; border-radius: 10px;
+  margin-bottom: 6px;
 }
-.timeline-bar.status-not-started { background: #ddd; color: #888; }
-.timeline-bar.status-researching { background: #f0c866; color: #6b4f0a; }
-.timeline-bar.status-waiting { background: #f0c866; color: #6b4f0a; }
-.timeline-bar.status-ready { background: var(--ready); }
-.timeline-bar.status-in-progress { background: #e8a838; }
-.timeline-bar.status-blocked { background: var(--blocked); }
-.timeline-bar.status-completed { background: var(--accent); }
-.timeline-deps { font-size: 11px; color: var(--text-light); margin-bottom: 4px; padding-left: 4px; }
+.step-phase.phase-buy { background: var(--ready-light); color: var(--ready); }
+.step-phase.phase-build { background: var(--warning-light); color: var(--warning); }
+.step-phase.phase-contractor { background: #f3e8f9; color: var(--blocked); }
+.step-blocked-note { font-size: 12px; color: var(--blocked); font-style: italic; margin-top: 2px; }
 
 /* Photos */
 .photo-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
@@ -682,8 +684,10 @@ body {
   /* Guides */
   .guide-link { font-size: 14px; padding: 4px 0; }
 
-  /* Timeline bars */
-  .timeline-bar { height: 32px; font-size: 12px; }
+  /* Timeline */
+  .steps { padding-left: 28px; }
+  .step-title { font-size: 14px; }
+  .step-sub { font-size: 12px; }
 
   /* Section headers */
   .section-header h2 { font-size: 16px; }
@@ -2100,83 +2104,88 @@ function renderNotes() {
 
 // ---- Timeline ----
 function renderTimeline() {
-  const phases = [
-    { name: 'Finalize Decisions', areaId: null, status: getPendingDecisions().length === 0 ? 'completed' : (data.decisions.some(d => d.status === 'researching') ? 'in-progress' : 'not-started'), deps: [] },
-    ...data.areas.map(a => ({
-      name: a.name,
-      areaId: a.id,
-      status: a.status,
-      deps: getDepsForArea(a.id)
-    }))
+  // Build the detailed step-by-step sequence
+  const steps = [
+    // PHASE 1: DECISIONS
+    { phase: 'Decide', title: 'Pick home exterior colors', sub: 'Siding, trim, accents — sets the palette for everything', taskIds: [], decIds: ['d2'], type: 'decide' },
+    { phase: 'Decide', title: 'Pick soffit paint color', sub: 'Needs to coordinate with siding & trim', taskIds: ['soffit-color'], decIds: ['d4'], type: 'decide' },
+    { phase: 'Decide', title: 'Pick shingle color', sub: 'Coordinate with siding choice', taskIds: ['roof-color'], decIds: ['d1'], type: 'decide' },
+    { phase: 'Decide', title: 'Pick gutter color', sub: 'Match or contrast with fascia/trim', taskIds: ['gutter-color'], decIds: ['d3'], type: 'decide' },
+    { phase: 'Decide', title: 'Choose eyebrow awning design', sub: 'Style, material, open pergola vs solid roof', taskIds: ['awning-design'], decIds: ['d5'], type: 'decide' },
+    { phase: 'Decide', title: 'Finalize awning dimensions', sub: 'Measure garage opening, decide projection', taskIds: ['awning-measure'], decIds: ['d6'], type: 'decide' },
+    { phase: 'Decide', title: 'Finalize deck repair scope', sub: 'Which boards, rails, what gets replaced vs patched', taskIds: ['deck-assess', 'deck-scope'], decIds: ['d7'], type: 'decide' },
+    { phase: 'Decide', title: 'Confirm contractor scope', sub: 'What they handle (roof/siding/gutters) vs what you do', taskIds: [], decIds: ['d8'], type: 'decide' },
+
+    // PHASE 2: SHOPPING
+    { phase: 'Buy', title: 'Mark paint & sprayer equipment to buy', sub: 'Sprayer, ladder, primer, paint, masking, drop cloths', taskIds: [], decIds: [], type: 'buy', area: 'soffits' },
+    { phase: 'Buy', title: 'Build eyebrow awning materials list', sub: 'Lumber, brackets, lag bolts, flashing, stain', taskIds: [], decIds: [], type: 'buy', area: 'awning' },
+    { phase: 'Buy', title: 'Build deck repair materials list', sub: 'Boards, screws, stain, cleaner, sealer', taskIds: [], decIds: [], type: 'buy', area: 'deck' },
+    { phase: 'Buy', title: 'Buy all materials — Menards run', sub: 'One big trip. Check Shopping List tab for the full list.', taskIds: [], decIds: [], type: 'buy', link: 'shopping' },
+
+    // PHASE 3: DIY WORK
+    { phase: 'Build', title: 'Prep soffits', sub: 'Clean with TSP, sand, caulk gaps, mask everything', taskIds: ['soffit-prep'], decIds: [], type: 'build' },
+    { phase: 'Build', title: 'Paint soffits (sprayer)', sub: 'Prime first, then 2 coats. Must be done before awning.', taskIds: ['soffit-paint'], decIds: [], type: 'build' },
+    { phase: 'Build', title: 'Deck work affecting wall access', sub: 'Any deck sections near the house wall — do before siding', taskIds: ['deck-access'], decIds: [], type: 'build' },
+    { phase: 'Build', title: 'Build & install eyebrow awning', sub: 'Mount ledger, rafters, flash it properly. Before siding goes on.', taskIds: ['awning-fab', 'awning-install'], decIds: [], type: 'build' },
+
+    // PHASE 4: CONTRACTOR
+    { phase: 'Contractor', title: 'Roof installation', sub: 'Contractor handles. Covered by insurance.', taskIds: ['roof-install'], decIds: [], type: 'contractor' },
+    { phase: 'Contractor', title: 'Siding installation', sub: 'Contractor handles. Must happen after awning is up.', taskIds: ['siding-install', 'siding-trim'], decIds: [], type: 'contractor' },
+    { phase: 'Contractor', title: 'Gutter installation', sub: 'After roof and siding are done.', taskIds: ['gutter-install'], decIds: [], type: 'contractor' },
+
+    // PHASE 5: FINISH
+    { phase: 'Finish', title: 'Deck board replacement & repair', sub: 'Replace bad boards, fill cracks, sand new lumber', taskIds: ['deck-repair'], decIds: [], type: 'build' },
+    { phase: 'Finish', title: 'Stain / seal deck', sub: 'Clean, let dry, stain everything. Last outdoor step.', taskIds: ['deck-finish'], decIds: [], type: 'build' },
+    { phase: 'Finish', title: 'Final walkthrough', sub: 'Check everything. Touch-ups. Done.', taskIds: ['roof-cleanup'], decIds: [], type: 'decide' },
   ];
 
-  const order = ['soffits', 'awning', 'deck', 'roof', 'siding', 'gutters'];
-  const sorted = [phases[0]];
-  order.forEach(id => {
-    const p = phases.find(ph => ph.areaId === id);
-    if (p) sorted.push(p);
+  // Determine status of each step
+  const at = getAllTasks();
+  steps.forEach(s => {
+    const tasks = s.taskIds.map(id => at.find(t => t.id === id)).filter(Boolean);
+    const decs = s.decIds.map(id => data.decisions.find(d => d.id === id)).filter(Boolean);
+
+    const allTasksDone = tasks.length === 0 || tasks.every(t => t.done);
+    const allDecsDone = decs.length === 0 || decs.every(d => d.status === 'chosen');
+    const anyTaskIP = tasks.some(t => t.status === 'in-progress');
+    const anyDecIP = decs.some(d => d.status === 'researching');
+    const anyBlocked = tasks.some(t => isTaskBlocked(t));
+
+    if (allTasksDone && allDecsDone) s.state = 'done';
+    else if (anyBlocked) { s.state = 'blocked'; s.blockedBy = tasks.flatMap(t => getBlockedBy(t)).filter((v,i,a) => a.indexOf(v) === i); }
+    else if (anyTaskIP || anyDecIP) s.state = 'active';
+    else s.state = 'pending';
   });
-  // Add any remaining
-  phases.forEach(p => {
-    if (!sorted.includes(p)) sorted.push(p);
-  });
+
+  let currentPhase = '';
 
   return `
-    <h2 style="font-size:18px;margin-bottom:16px">Project Timeline</h2>
-    <p style="color:var(--text-light);font-size:13px;margin-bottom:20px">Project sequencing and status at a glance.</p>
-    <div class="timeline-container">
-      ${sorted.map(p => {
-        const deps = p.deps.length ? p.deps.join(', ') : '';
+    <h2 style="font-size:18px;margin-bottom:6px">Project Timeline</h2>
+    <p style="color:var(--text-light);font-size:13px;margin-bottom:20px">Step-by-step sequence. Do these in order, top to bottom.</p>
+    <div class="steps">
+      ${steps.map((s, i) => {
+        let phaseHTML = '';
+        if (s.phase !== currentPhase) {
+          currentPhase = s.phase;
+          const pcls = s.type === 'buy' ? 'phase-buy' : s.type === 'build' ? 'phase-build' : s.type === 'contractor' ? 'phase-contractor' : '';
+          phaseHTML = `<div class="step-phase ${pcls}">${s.phase}</div>`;
+        }
+        const cls = s.state === 'done' ? 'done' : s.state === 'active' ? 'active' : s.state === 'blocked' ? 'blocked' : '';
+        const click = s.link ? `onclick="switchTab('${s.link}')" style="cursor:pointer"` :
+                      s.area ? `onclick="switchTab('${s.area}')" style="cursor:pointer"` :
+                      s.taskIds.length && at.find(t => t.id === s.taskIds[0]) ? `onclick="switchTab('${at.find(t => t.id === s.taskIds[0]).areaId}')" style="cursor:pointer"` :
+                      s.decIds.length ? `onclick="switchTab('decisions')" style="cursor:pointer"` : '';
         return `
-        <div class="timeline-bar-wrap" ${p.areaId ? `onclick="switchTab('${p.areaId}')" style="cursor:pointer"` : ''}>
-          <div class="timeline-label">
-            <span class="name">${p.name}</span>
-          </div>
-          ${deps ? `<div class="timeline-deps">Depends on: ${deps}</div>` : ''}
-          <div class="timeline-bar status-${p.status}" style="width:100%">
-            ${statusLabel(p.status)}
-          </div>
-        </div>`;
+          ${phaseHTML}
+          <div class="step ${cls}" ${click}>
+            <div class="step-dot"></div>
+            <div class="step-title">${esc(s.title)}</div>
+            <div class="step-sub">${esc(s.sub)}</div>
+            ${s.state === 'blocked' && s.blockedBy ? `<div class="step-blocked-note">Waiting on: ${s.blockedBy.join(', ')}</div>` : ''}
+          </div>`;
       }).join('')}
     </div>
-
-    <div class="sub-section">
-      <h4>Recommended Sequence</h4>
-      <ol style="padding-left:20px;font-size:14px;line-height:2">
-        <li>Finalize all decisions and selections</li>
-        <li>Complete measurements and planning</li>
-        <li>Place combined materials order</li>
-        <li>Paint soffits</li>
-        <li>Deck work affecting wall access</li>
-        <li>Install eyebrow awning on garage</li>
-        <li>Roof installation</li>
-        <li>Siding installation</li>
-        <li>Gutter installation</li>
-        <li>Remaining deck finish work</li>
-        <li>Final walkthrough and cleanup</li>
-      </ol>
-    </div>
   `;
-}
-
-function getDepsForArea(areaId) {
-  const depMap = {
-    'soffits': [],
-    'awning': ['Soffits painted'],
-    'deck': [],
-    'roof': [],
-    'siding': ['Eyebrow Awning installed', 'Deck access work done'],
-    'gutters': ['Roof complete', 'Siding complete'],
-  };
-  return depMap[areaId] || [];
-}
-
-function parseEstDays(est) {
-  if (!est) return 3;
-  const match = est.match(/(\d+)/g);
-  if (!match) return 3;
-  if (match.length >= 2) return (parseInt(match[0]) + parseInt(match[1])) / 2;
-  return parseInt(match[0]);
 }
 
 // ---- Activity Log ----
