@@ -2107,33 +2107,24 @@ function renderTimeline() {
   // Build the detailed step-by-step sequence
   const steps = [
     // PHASE 1: DECISIONS
-    { phase: 'Decide', title: 'Pick home exterior colors', sub: 'Siding, trim, accents — sets the palette for everything', taskIds: [], decIds: ['d2'], type: 'decide' },
-    { phase: 'Decide', title: 'Pick soffit paint color', sub: 'Needs to coordinate with siding & trim', taskIds: ['soffit-color'], decIds: ['d4'], type: 'decide' },
-    { phase: 'Decide', title: 'Pick shingle color', sub: 'Coordinate with siding choice', taskIds: ['roof-color'], decIds: ['d1'], type: 'decide' },
-    { phase: 'Decide', title: 'Pick gutter color', sub: 'Match or contrast with fascia/trim', taskIds: ['gutter-color'], decIds: ['d3'], type: 'decide' },
-    { phase: 'Decide', title: 'Choose eyebrow awning design', sub: 'Style, material, open pergola vs solid roof', taskIds: ['awning-design'], decIds: ['d5'], type: 'decide' },
-    { phase: 'Decide', title: 'Finalize awning dimensions', sub: 'Measure garage opening, decide projection', taskIds: ['awning-measure'], decIds: ['d6'], type: 'decide' },
-    { phase: 'Decide', title: 'Finalize deck repair scope', sub: 'Which boards, rails, what gets replaced vs patched', taskIds: ['deck-assess', 'deck-scope'], decIds: ['d7'], type: 'decide' },
-    { phase: 'Decide', title: 'Confirm contractor scope', sub: 'What they handle (roof/siding/gutters) vs what you do', taskIds: [], decIds: ['d8'], type: 'decide' },
+    { phase: 'Decide', title: 'Pick soffit paint color', sub: 'Coordinate with house trim and siding', taskIds: ['soffit-color'], decIds: ['d4'], type: 'decide' },
+    { phase: 'Decide', title: 'Choose eyebrow awning design + dimensions', sub: 'Style, material, measure the garage opening', taskIds: ['awning-design', 'awning-measure'], decIds: ['d5', 'd6'], type: 'decide' },
+    { phase: 'Decide', title: 'Finalize deck repair scope', sub: 'Which boards, rails — what gets replaced vs patched', taskIds: ['deck-assess', 'deck-scope'], decIds: ['d7'], type: 'decide' },
 
     // PHASE 2: SHOPPING — one trip
-    { phase: 'Buy', title: 'Menards run — buy everything at once', sub: 'All soffit, awning, and deck materials in one trip. Check Shopping List tab.', taskIds: [], decIds: [], type: 'buy', link: 'shopping' },
+    { phase: 'Buy', title: 'Menards run — buy everything at once', sub: 'Sprayer, ladder, paint, lumber, deck boards, hardware — one trip', taskIds: [], decIds: [], type: 'buy', link: 'shopping' },
 
     // PHASE 3: DIY WORK
-    { phase: 'Build', title: 'Prep soffits', sub: 'Clean with TSP, sand, caulk gaps, mask everything', taskIds: ['soffit-prep'], decIds: [], type: 'build' },
-    { phase: 'Build', title: 'Paint soffits (sprayer)', sub: 'Prime first, then 2 coats. Must be done before awning.', taskIds: ['soffit-paint'], decIds: [], type: 'build' },
-    { phase: 'Build', title: 'Deck work affecting wall access', sub: 'Any deck sections near the house wall — do before siding', taskIds: ['deck-access'], decIds: [], type: 'build' },
-    { phase: 'Build', title: 'Build & install eyebrow awning', sub: 'Mount ledger, rafters, flash it properly. Before siding goes on.', taskIds: ['awning-fab', 'awning-install'], decIds: [], type: 'build' },
+    { phase: 'Build', title: 'Prep + paint soffits', sub: 'Clean, sand, mask, prime, spray 2 coats. Do before awning.', taskIds: ['soffit-prep', 'soffit-paint'], decIds: [], type: 'build' },
+    { phase: 'Build', title: 'Build + install eyebrow awning', sub: 'Ledger, rafters, flash it. Must be done before siding.', taskIds: ['awning-fab', 'awning-install'], decIds: [], type: 'build' },
+    { phase: 'Build', title: 'Deck work near house walls', sub: 'Any sections that affect wall access — before siding crew arrives', taskIds: ['deck-access'], decIds: [], type: 'build' },
 
     // PHASE 4: CONTRACTOR
-    { phase: 'Contractor', title: 'Roof installation', sub: 'Contractor handles. Covered by insurance.', taskIds: ['roof-install'], decIds: [], type: 'contractor' },
-    { phase: 'Contractor', title: 'Siding installation', sub: 'Contractor handles. Must happen after awning is up.', taskIds: ['siding-install', 'siding-trim'], decIds: [], type: 'contractor' },
-    { phase: 'Contractor', title: 'Gutter installation', sub: 'After roof and siding are done.', taskIds: ['gutter-install'], decIds: [], type: 'contractor' },
+    { phase: 'Contractor', title: 'Roof + siding + gutters', sub: 'Contractor handles all three. Covered by insurance.', taskIds: ['roof-install', 'siding-install', 'gutter-install'], decIds: [], type: 'contractor' },
 
     // PHASE 5: FINISH
-    { phase: 'Finish', title: 'Deck board replacement & repair', sub: 'Replace bad boards, fill cracks, sand new lumber', taskIds: ['deck-repair'], decIds: [], type: 'build' },
-    { phase: 'Finish', title: 'Stain / seal deck', sub: 'Clean, let dry, stain everything. Last outdoor step.', taskIds: ['deck-finish'], decIds: [], type: 'build' },
-    { phase: 'Finish', title: 'Final walkthrough', sub: 'Check everything. Touch-ups. Done.', taskIds: ['roof-cleanup'], decIds: [], type: 'decide' },
+    { phase: 'Finish', title: 'Deck repair + stain', sub: 'Replace boards, sand, clean, stain everything', taskIds: ['deck-repair', 'deck-finish'], decIds: [], type: 'build' },
+    { phase: 'Finish', title: 'Final walkthrough', sub: 'Touch-ups, cleanup, done', taskIds: [], decIds: [], type: 'decide' },
   ];
 
   // Determine status of each step
