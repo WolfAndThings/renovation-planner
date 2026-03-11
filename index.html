@@ -7,1984 +7,670 @@
 <style>
 :root {
   --bg: #f5f3ef;
-  --card: #ffffff;
+  --card: #fff;
   --border: #e0dcd4;
   --text: #2c2c2c;
-  --text-light: #6b6560;
+  --muted: #6b6560;
   --accent: #4a7c59;
-  --accent-light: #e8f0eb;
-  --warning: #c47a2a;
-  --warning-light: #fef3e2;
+  --accent-lt: #e8f0eb;
+  --warn: #c47a2a;
+  --warn-lt: #fef3e2;
   --danger: #b44040;
-  --danger-light: #fde8e8;
   --blocked: #9b59b6;
-  --blocked-light: #f3e8f9;
   --ready: #2980b9;
-  --ready-light: #e8f4fd;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+  --ready-lt: #e8f4fd;
+  --progress: #e8a838;
   --radius: 8px;
   --radius-sm: 4px;
 }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+.hdr{background:#2c2c2c;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.hdr h1{font-size:16px;font-weight:600}
+.hdr-actions{display:flex;gap:6px}
+.hdr-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:12px}
+.hdr-btn:hover{background:rgba(255,255,255,.22)}
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.5;
-  min-height: 100vh;
-}
+.wrap{max-width:800px;margin:0 auto;padding:16px}
 
-/* Header */
-.header {
-  background: #2c2c2c;
-  color: white;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
-.header-actions { display: flex; gap: 8px; }
-.header-btn {
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: white;
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 13px;
-  transition: background 0.15s;
-}
-.header-btn:hover { background: rgba(255,255,255,0.2); }
-
-/* Layout */
-.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-
-/* Nav tabs */
-.nav-tabs {
-  display: flex;
-  gap: 4px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 4px;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  flex-wrap: wrap;
-}
-.nav-tab {
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-  border: none;
-  background: transparent;
-  color: var(--text-light);
-  transition: all 0.15s;
-}
-.nav-tab:hover { background: var(--bg); color: var(--text); }
-.nav-tab.active { background: var(--accent); color: white; }
+/* Tabs */
+.tabs{display:flex;gap:3px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:4px;margin-bottom:16px;overflow-x:auto}
+.tab{padding:8px 16px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap;border:none;background:0;color:var(--muted)}
+.tab:hover{background:var(--bg);color:var(--text)}
+.tab.on{background:var(--accent);color:#fff}
 
 /* Cards */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 16px;
-  box-shadow: var(--shadow);
-}
-.card-header {
-  padding: 14px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  border-bottom: 1px solid transparent;
-}
-.card-header.expanded { border-bottom-color: var(--border); }
-.card-header h2 { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-.card-header .chevron { transition: transform 0.2s; font-size: 12px; color: var(--text-light); }
-.card-header .chevron.open { transform: rotate(90deg); }
-.card-body { padding: 18px; display: none; }
-.card-body.open { display: block; }
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-pad{padding:14px}
 
-/* Status badges */
-.badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-.badge-not-started { background: #eee; color: #888; }
-.badge-researching { background: var(--warning-light); color: var(--warning); }
-.badge-waiting { background: var(--warning-light); color: var(--warning); }
-.badge-ready { background: var(--ready-light); color: var(--ready); }
-.badge-in-progress { background: #fff3cd; color: #856404; }
-.badge-blocked { background: var(--blocked-light); color: var(--blocked); }
-.badge-completed { background: var(--accent-light); color: var(--accent); }
-.badge-chosen { background: var(--accent-light); color: var(--accent); }
+/* Steps */
+.steps{position:relative;padding-left:32px}
+.steps::before{content:'';position:absolute;left:13px;top:0;bottom:0;width:2px;background:var(--border)}
+.step{position:relative;padding:0 0 24px 16px}
+.step:last-child{padding-bottom:0}
+.step-dot{position:absolute;left:-25px;top:3px;width:16px;height:16px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;z-index:1}
+.step.done .step-dot{background:var(--accent);border-color:var(--accent)}
+.step.done .step-dot::after{content:'✓';color:#fff;font-weight:700}
+.step.active .step-dot{background:var(--progress);border-color:var(--progress);box-shadow:0 0 0 4px rgba(232,168,56,.2)}
+.step.active .step-dot::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
+.step-phase{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;display:inline-block;padding:3px 10px;border-radius:10px;margin-bottom:8px}
+.phase-decide{background:var(--accent-lt);color:var(--accent)}
+.phase-buy{background:var(--ready-lt);color:var(--ready)}
+.phase-build{background:var(--warn-lt);color:var(--warn)}
+.phase-contractor{background:#f3e8f9;color:var(--blocked)}
+.phase-finish{background:#e8f0eb;color:var(--accent)}
 
-/* Stats grid */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  text-align: center;
-}
-.stat-number { font-size: 28px; font-weight: 700; line-height: 1.1; }
-.stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.step-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.step.done .step-title{color:var(--accent);opacity:.6}
+.step-sub{font-size:13px;color:var(--muted);margin-top:2px}
 
-/* Next up panel */
-.next-up {
-  background: var(--accent-light);
-  border: 1px solid #c1d9c8;
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  margin-bottom: 20px;
-}
-.next-up h3 { font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 10px; }
-.next-up-item {
-  padding: 8px 0;
-  border-bottom: 1px solid #c1d9c8;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.next-up-item:last-child { border-bottom: none; }
-.next-up-item .area-tag {
-  font-size: 11px;
-  background: var(--accent);
-  color: white;
-  padding: 1px 8px;
-  border-radius: 10px;
-}
+/* Step expandable content */
+.step-body{margin-top:10px;padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.step-body.collapsed{display:none}
 
-/* Alerts */
-.alerts { margin-bottom: 20px; }
-.alert {
-  padding: 12px 16px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 8px;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.alert-warning { background: var(--warning-light); border: 1px solid #f0d9b5; color: #7a5a1a; }
-.alert-blocked { background: var(--blocked-light); border: 1px solid #d6b8e3; color: #6a3080; }
-.alert-danger { background: var(--danger-light); border: 1px solid #f0b8b8; color: #8a2020; }
+/* Checklist inside steps */
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px}
+.check-item:last-child{border-bottom:none}
+.check-item input[type=checkbox]{width:18px;height:18px;margin-top:1px;cursor:pointer;accent-color:var(--accent);flex-shrink:0}
+.check-item label{flex:1;cursor:pointer}
+.check-item label.done{text-decoration:line-through;color:var(--muted)}
+.check-item .check-note{font-size:12px;color:var(--muted);display:block}
 
-/* Form elements */
-.form-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
-.form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
-.form-group label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); }
-.form-group input, .form-group select, .form-group textarea {
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-family: inherit;
-  background: white;
-  transition: border-color 0.15s;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-.form-group textarea { resize: vertical; min-height: 60px; }
+/* Decision option cards */
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px}
+.opt{border:2px solid var(--border);border-radius:var(--radius);padding:8px;cursor:pointer;text-align:center;font-size:13px;font-weight:500;transition:.15s}
+.opt:hover{border-color:var(--accent)}
+.opt.picked{border-color:var(--accent);background:var(--accent-lt)}
+.opt img{width:100%;height:80px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:6px}
+.opt-add{border-style:dashed;color:var(--muted);display:flex;align-items:center;justify-content:center;min-height:60px}
+.opt-add:hover{color:var(--accent);border-color:var(--accent)}
 
-/* Task list */
-.task-list { list-style: none; }
-.task-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-}
-.task-item:last-child { border-bottom: none; }
-.task-check {
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
-  cursor: pointer;
-  accent-color: var(--accent);
-  flex-shrink: 0;
-}
-.task-content { flex: 1; }
-.task-name { font-size: 14px; font-weight: 500; }
-.task-name.done { text-decoration: line-through; color: var(--text-light); }
-.task-meta { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; align-items: center; }
-.task-meta select, .task-meta input {
-  padding: 3px 6px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  background: white;
-}
-.task-meta .dep-tag { font-size: 11px; color: var(--blocked); background: var(--blocked-light); padding: 1px 6px; border-radius: 8px; }
-.task-notes {
-  margin-top: 6px;
-  font-size: 13px;
-  color: var(--text-light);
-  padding: 4px 8px;
-  background: var(--bg);
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  width: 100%;
-  min-height: 24px;
-}
-.task-notes:focus { border-color: var(--accent); outline: none; background: white; }
-.task-actions { display: flex; gap: 4px; flex-shrink: 0; }
-.task-delete {
-  background: none;
-  border: none;
-  color: #ccc;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-}
-.task-delete:hover { color: var(--danger); background: var(--danger-light); }
-
-/* Add task */
-.add-task-row { display: flex; gap: 8px; margin-top: 12px; }
-.add-task-row input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; }
-.add-task-row input:focus { outline: none; border-color: var(--accent); }
+/* Shopping */
+.shop-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.shop-item:last-child{border-bottom:none}
+.shop-item input[type=checkbox]{width:18px;height:18px;margin-top:1px;cursor:pointer;accent-color:var(--accent);flex-shrink:0}
+.shop-item-name{font-weight:500}
+.shop-item-name.bought{text-decoration:line-through;color:var(--muted)}
+.shop-item-detail{font-size:12px;color:var(--muted)}
+.shop-group{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:10px 0 4px;border-bottom:2px solid var(--border)}
+.shop-input{display:flex;gap:6px;margin-bottom:12px}
+.shop-input input{flex:1;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-family:inherit}
+.shop-input input:focus{outline:none;border-color:var(--accent)}
+.shop-input select{padding:10px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px}
 
 /* Buttons */
-.btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.15s;
-}
-.btn-primary { background: var(--accent); color: white; }
-.btn-primary:hover { background: #3d6a4b; }
-.btn-sm { padding: 4px 10px; font-size: 12px; }
-.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-.btn-outline:hover { background: var(--bg); }
-
-/* Materials table */
-.materials-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.materials-table th {
-  text-align: left;
-  padding: 8px 10px;
-  background: var(--bg);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-light);
-  border-bottom: 2px solid var(--border);
-  white-space: nowrap;
-}
-.materials-table td {
-  padding: 6px 10px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-.materials-table input, .materials-table select {
-  width: 100%;
-  padding: 4px 6px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  background: transparent;
-}
-.materials-table input:focus, .materials-table select:focus {
-  border-color: var(--accent);
-  outline: none;
-  background: white;
-}
-.materials-table tr:hover td { background: #fafaf8; }
-
-/* Decisions */
-.decision-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 10px;
-  background: white;
-}
-.decision-card.status-chosen { border-left: 3px solid var(--accent); }
-.decision-card.status-researching { border-left: 3px solid var(--warning); }
-.decision-card.status-not-started { border-left: 3px solid #ccc; }
-.decision-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.decision-name { font-weight: 600; font-size: 15px; }
-
-/* Timeline */
-/* Step timeline */
-.steps { position: relative; padding-left: 32px; }
-.steps::before { content: ''; position: absolute; left: 13px; top: 0; bottom: 0; width: 2px; background: var(--border); }
-.step { position: relative; padding: 0 0 20px 16px; }
-.step:last-child { padding-bottom: 0; }
-.step-dot {
-  position: absolute; left: -25px; top: 2px;
-  width: 16px; height: 16px; border-radius: 50%;
-  border: 2px solid var(--border); background: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; z-index: 1;
-}
-.step.done .step-dot { background: var(--accent); border-color: var(--accent); }
-.step.done .step-dot::after { content: '✓'; color: #fff; font-weight: 700; }
-.step.active .step-dot { background: var(--progress); border-color: var(--progress); box-shadow: 0 0 0 4px rgba(232,168,56,0.2); }
-.step.active .step-dot::after { content: ''; width: 6px; height: 6px; background: #fff; border-radius: 50%; }
-.step.blocked .step-dot { background: var(--blocked); border-color: var(--blocked); }
-.step.blocked .step-dot::after { content: '!'; color: #fff; font-weight: 700; }
-.step-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
-.step.done .step-title { color: var(--accent); text-decoration: line-through; opacity: 0.7; }
-.step.blocked .step-title { color: var(--blocked); }
-.step-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
-.step-arrow { color: var(--border); font-size: 11px; padding: 4px 0 4px 0; letter-spacing: 2px; }
-.step-phase {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 1px; color: var(--accent); background: var(--accent-light);
-  display: inline-block; padding: 3px 10px; border-radius: 10px;
-  margin-bottom: 6px;
-}
-.step-phase.phase-buy { background: var(--ready-light); color: var(--ready); }
-.step-phase.phase-build { background: var(--warning-light); color: var(--warning); }
-.step-phase.phase-contractor { background: #f3e8f9; color: var(--blocked); }
-.step-blocked-note { font-size: 12px; color: var(--blocked); font-style: italic; margin-top: 2px; }
+.btn{padding:8px 14px;border:none;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500}
+.btn-p{background:var(--accent);color:#fff}
+.btn-p:hover{background:#3d6a4b}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-o{background:0;border:1px solid var(--border);color:var(--text)}
+.btn-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:16px;padding:2px 6px}
+.btn-del:hover{color:var(--danger)}
 
 /* Photos */
-.photo-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
-.photo-thumb {
-  width: 120px;
-  height: 120px;
-  border-radius: var(--radius-sm);
-  object-fit: cover;
-  border: 1px solid var(--border);
-  cursor: pointer;
-}
-.photo-upload-area {
-  width: 120px;
-  height: 120px;
-  border: 2px dashed var(--border);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text-light);
-  font-size: 12px;
-  text-align: center;
-  transition: border-color 0.15s;
-}
-.photo-upload-area:hover { border-color: var(--accent); color: var(--accent); }
-.photo-item { position: relative; }
-.photo-delete {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--danger);
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.photo-caption { font-size: 11px; color: var(--text-light); margin-top: 4px; max-width: 120px; word-wrap: break-word; }
+.photo-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.photo-thumb{width:100px;height:100px;border-radius:var(--radius-sm);object-fit:cover;border:1px solid var(--border);cursor:pointer}
+.photo-add{width:100px;height:100px;border:2px dashed var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:12px;text-align:center}
+.photo-add:hover{border-color:var(--accent);color:var(--accent)}
+.photo-wrap{position:relative}
+.photo-x{position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:var(--danger);color:#fff;border:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center}
 
-/* Guide links */
-.guide-list { list-style: none; }
-.guide-list li { padding: 5px 0; border-bottom: 1px solid var(--border); }
-.guide-list li:last-child { border-bottom: none; }
-.guide-link { color: var(--accent); text-decoration: none; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-.guide-link:hover { text-decoration: underline; }
-.guide-link::before { content: '↗'; font-size: 11px; opacity: 0.6; }
-.guide-category { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); margin-top: 10px; margin-bottom: 4px; }
-.guide-category:first-child { margin-top: 0; }
+/* Guides */
+.guide-list{list-style:none;margin-top:6px}
+.guide-list li{padding:4px 0;border-bottom:1px solid var(--border)}
+.guide-list li:last-child{border-bottom:none}
+.guide-link{color:var(--accent);text-decoration:none;font-size:13px;font-weight:500}
+.guide-link:hover{text-decoration:underline}
+.guide-link::before{content:'↗ ';font-size:11px;opacity:.6}
+.guide-cat{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:8px;margin-bottom:2px}
 
-/* Shopping list */
-.shop-input-row { display: flex; gap: 8px; margin-bottom: 16px; }
-.shop-input-row input { flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; }
-.shop-input-row input:focus { outline: none; border-color: var(--accent); }
-.shop-input-row select { padding: 10px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; }
-.shop-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-.shop-item:last-child { border-bottom: none; }
-.shop-item input[type=checkbox] { width: 20px; height: 20px; margin-top: 2px; cursor: pointer; accent-color: var(--accent); flex-shrink: 0; }
-.shop-item-body { flex: 1; }
-.shop-item-name { font-size: 15px; font-weight: 500; }
-.shop-item-name.bought { text-decoration: line-through; color: var(--text-light); }
-.shop-item-meta { font-size: 12px; color: var(--text-light); margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.shop-area-badge { font-size: 11px; background: var(--bg); padding: 1px 7px; border-radius: 8px; border: 1px solid var(--border); }
-.shop-qty { font-size: 12px; color: var(--text); font-weight: 500; }
-.shop-group-header { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); padding: 10px 0 4px; margin-top: 6px; border-bottom: 2px solid var(--border); }
-.shop-summary { display: flex; gap: 16px; margin-bottom: 14px; font-size: 14px; flex-wrap: wrap; }
-.shop-summary span { display: flex; align-items: center; gap: 4px; }
-.shop-count { font-weight: 700; }
+/* Notes */
+.notes-area{width:100%;min-height:120px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;resize:vertical}
+.notes-area:focus{outline:none;border-color:var(--accent)}
 
-/* Option picker (visual decisions) */
-.option-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
-.option-card {
-  width: 160px;
-  border: 2px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: white;
-  position: relative;
-}
-.option-card:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-.option-card.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
-.option-card.selected::after {
-  content: '';
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 24px;
-  height: 24px;
-  background: var(--accent);
-  border-radius: 50%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
-  background-size: 16px;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.option-card.rejected { opacity: 0.4; border-color: var(--danger); }
-.option-card.maybe { border-color: var(--warning); }
-.option-img {
-  width: 100%;
-  height: 130px;
-  object-fit: cover;
-  display: block;
-  background: var(--bg);
-}
-.option-img-placeholder {
-  width: 100%;
-  height: 130px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg);
-  color: var(--text-light);
-  font-size: 12px;
-}
-.option-info { padding: 8px 10px; }
-.option-label {
-  font-size: 13px;
-  font-weight: 600;
-  border: none;
-  background: transparent;
-  width: 100%;
-  padding: 0;
-}
-.option-label:focus { outline: none; border-bottom: 1px solid var(--accent); }
-.option-source {
-  font-size: 11px;
-  color: var(--text-light);
-  border: none;
-  background: transparent;
-  width: 100%;
-  padding: 0;
-  margin-top: 2px;
-}
-.option-source:focus { outline: none; border-bottom: 1px solid var(--accent); }
-.option-tags { display: flex; gap: 4px; margin-top: 6px; padding: 0 10px 8px; }
-.option-tag {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: white;
-  transition: all 0.15s;
-}
-.option-tag:hover { background: var(--bg); }
-.option-tag.tag-favorite { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
-.option-tag.tag-maybe { background: var(--warning-light); color: var(--warning); border-color: var(--warning); }
-.option-tag.tag-rejected { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
-.option-actions {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  display: flex;
-  gap: 2px;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-.option-card:hover .option-actions { opacity: 1; }
-.option-action-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.9);
-  color: var(--text-light);
-  box-shadow: var(--shadow);
-}
-.option-action-btn:hover { background: white; color: var(--danger); }
-.option-add-card {
-  width: 160px;
-  height: 200px;
-  border: 2px dashed var(--border);
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text-light);
-  font-size: 13px;
-  gap: 6px;
-  transition: all 0.15s;
-}
-.option-add-card:hover { border-color: var(--accent); color: var(--accent); }
-.option-add-icon { font-size: 28px; line-height: 1; }
-.option-url-input {
-  width: 100%;
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  margin-top: 8px;
-}
-.option-url-input:focus { outline: none; border-color: var(--accent); }
-.option-compare-bar {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 16px;
-  margin-top: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.option-compare-bar .count { font-size: 14px; font-weight: 500; }
-.option-filter-btns { display: flex; gap: 4px; }
-.option-filter-btn {
-  padding: 4px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: white;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.option-filter-btn:hover { background: var(--bg); }
-.option-filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
+.stat b{font-size:24px;display:block;line-height:1.1}
+.stat small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 
-/* Activity log */
-.activity-log { max-height: 300px; overflow-y: auto; }
-.log-entry { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; display: flex; gap: 10px; }
-.log-entry:last-child { border-bottom: none; }
-.log-date { color: var(--text-light); font-size: 12px; white-space: nowrap; flex-shrink: 0; }
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal-bg img{max-width:90vw;max-height:90vh;border-radius:var(--radius)}
+.modal-close{position:fixed;top:14px;right:14px;background:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;z-index:201}
 
-/* Sections */
-.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.hidden{display:none}
 
-/* Filter bar */
-.filter-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.filter-bar label { font-size: 12px; font-weight: 600; color: var(--text-light); }
-.filter-bar select { padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; }
+/* Sub-headers in steps */
+.step-section{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:10px;margin-bottom:4px}
 
-/* Print styles */
-@media print {
-  .header, .nav-tabs, .header-actions, .add-task-row, .task-delete, .photo-upload-area, .filter-bar { display: none !important; }
-  .card-body { display: block !important; }
-  .card { break-inside: avoid; }
-  body { background: white; }
-}
+/* Measurements */
+.meas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-top:6px}
+.meas-item{background:#fff;padding:6px 8px;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.meas-item label{font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:2px}
+.meas-item input{width:100%;padding:5px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px}
+.meas-item input:focus{outline:none;border-color:var(--accent)}
 
-/* Responsive */
-@media (max-width: 768px) {
-  .container { padding: 10px; }
-  .header { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
-  .header h1 { font-size: 15px; }
-  .header-actions { gap: 4px; }
-  .header-btn { padding: 5px 8px; font-size: 11px; }
-  .form-row { flex-direction: column; }
-  .form-group { min-width: 100%; }
-  .form-group select, .form-group input { font-size: 16px; padding: 10px; } /* prevent iOS zoom */
-  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-  .stat-card { padding: 10px; }
-  .stat-card .stat-number, .stat-card b, [style*="font-size:28px"], [style*="font-size:26px"] { font-size: 22px !important; }
-  .nav-tabs { gap: 2px; flex-wrap: nowrap; overflow-x: auto; padding: 3px; }
-  .nav-tab { padding: 8px 12px; font-size: 12px; flex-shrink: 0; }
+/* Toggle */
+.toggle-btn{background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;font-weight:500;padding:0}
+.toggle-btn:hover{text-decoration:underline}
 
-  /* Materials table: horizontal scroll */
-  .materials-table { font-size: 11px; }
-  .materials-table input, .materials-table select { font-size: 14px; padding: 6px 4px; }
+/* Print */
+@media print{.hdr,.tabs,.hdr-actions,.btn,.modal-bg,.shop-input,.photo-add,.toggle-btn{display:none!important}body{background:#fff}.step-body.collapsed{display:block!important}}
 
-  /* Tasks: bigger touch targets */
-  .task-item { padding: 12px 0; }
-  .task-check { width: 22px; height: 22px; }
-  .task-meta select, .task-meta input { font-size: 14px; padding: 6px; }
-  .task-notes { font-size: 14px; padding: 8px; }
-  .task-name { font-size: 15px; }
-  .task-delete { font-size: 20px; padding: 6px 10px; }
-  .add-task-row input { font-size: 16px; padding: 10px; }
-  .btn { padding: 10px 16px; font-size: 14px; }
-
-  /* Decision cards */
-  .decision-card { padding: 10px; }
-  .decision-name { font-size: 14px !important; }
-  .option-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
-  .option-card { min-height: 0; }
-
-  /* Photos */
-  .photo-grid { gap: 6px; }
-  .photo-thumb { width: 90px; height: 90px; }
-  .photo-upload-area { width: 90px; height: 90px; font-size: 11px; }
-
-  /* Measurements */
-  .measurement-grid { grid-template-columns: 1fr; }
-  .measurement-item input { font-size: 16px; }
-
-  /* Next up */
-  .next-up, .nextup { padding: 12px; }
-  .next-up-item, .nextup-item { font-size: 14px; padding: 8px 0; }
-  .area-tag { font-size: 10px; }
-
-  /* Alerts */
-  .alert { font-size: 13px; padding: 10px 12px; }
-
-  /* Guides */
-  .guide-link { font-size: 14px; padding: 4px 0; }
-
-  /* Timeline */
-  .steps { padding-left: 28px; }
-  .step-title { font-size: 14px; }
-  .step-sub { font-size: 12px; }
-
-  /* Section headers */
-  .section-header h2 { font-size: 16px; }
-  .sub-section h4 { font-size: 12px; }
-
-  /* Budget row */
-  .budget-row { flex-direction: column; }
-  .budget-row input { width: 100%; }
-
-  /* Dep tags */
-  .dep-tag { font-size: 11px; }
-
-  /* Log */
-  .log-entry { font-size: 13px; flex-direction: column; gap: 2px; }
-
-  /* Shopping */
-  .shop-input-row { flex-direction: column; }
-  .shop-input-row input { font-size: 16px; }
-  .shop-input-row select { font-size: 16px; }
-  .shop-item input[type=checkbox] { width: 24px; height: 24px; }
-  .shop-item-name { font-size: 16px; }
-}
-
-/* Tab content */
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* Sub-sections */
-.sub-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-.sub-section h4 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); margin-bottom: 10px; }
-
-/* Measurement fields */
-.measurement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-.measurement-item { background: var(--bg); padding: 10px; border-radius: var(--radius-sm); }
-.measurement-item label { font-size: 11px; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 4px; }
-.measurement-item input { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; }
-
-/* Budget row */
-.budget-row { display: flex; gap: 10px; align-items: center; font-size: 13px; }
-.budget-row input { width: 100px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); }
-
-/* Hidden file input */
-.hidden-input { display: none; }
-
-/* Modal overlay */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-}
-.modal-overlay.open { display: flex; }
-.modal-overlay img { max-width: 90vw; max-height: 90vh; border-radius: var(--radius); }
-.modal-close {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  background: white;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 201;
+/* Mobile */
+@media(max-width:768px){
+  .wrap{padding:10px}
+  .hdr{padding:12px 14px;flex-wrap:wrap;gap:8px}
+  .hdr h1{font-size:14px}
+  .tabs{gap:2px;flex-wrap:nowrap;overflow-x:auto;padding:3px}
+  .tab{padding:8px 12px;font-size:12px;flex-shrink:0}
+  .step-title{font-size:14px}
+  .step-body input,.step-body select,.step-body textarea{font-size:16px}
+  .check-item input[type=checkbox]{width:22px;height:22px}
+  .check-item{font-size:15px;padding:9px 0}
+  .shop-item input[type=checkbox]{width:22px;height:22px}
+  .shop-item{font-size:15px;padding:10px 0}
+  .shop-input{flex-direction:column}
+  .shop-input input,.shop-input select{font-size:16px}
+  .btn{padding:10px 16px;font-size:14px}
+  .opts{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .meas-grid{grid-template-columns:1fr}
+  .photo-thumb,.photo-add{width:85px;height:85px}
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>Home Exterior Renovation Planner</h1>
-  <div class="header-actions">
-    <button class="header-btn" onclick="exportData()">Export JSON</button>
-    <button class="header-btn" onclick="document.getElementById('importInput').click()">Import JSON</button>
-    <button class="header-btn" onclick="window.print()">Print</button>
-    <input type="file" id="importInput" class="hidden-input" accept=".json" onchange="importData(event)">
+<div class="hdr">
+  <h1>Home Exterior Renovation</h1>
+  <div class="hdr-actions">
+    <button class="hdr-btn" onclick="exportJSON()">Export</button>
+    <button class="hdr-btn" onclick="document.getElementById('imp').click()">Import</button>
+    <button class="hdr-btn" onclick="window.print()">Print</button>
+    <input type="file" id="imp" class="hidden" accept=".json" onchange="importJSON(event)">
   </div>
 </div>
 
-<div class="container">
-  <div class="nav-tabs" id="navTabs"></div>
-  <div id="tabContents"></div>
+<div class="wrap">
+  <div class="tabs" id="tabs"></div>
+  <div id="content"></div>
 </div>
 
-<div class="modal-overlay" id="photoModal" onclick="closePhotoModal()">
-  <button class="modal-close" onclick="closePhotoModal()">&times;</button>
-  <img id="photoModalImg" src="">
+<div class="modal-bg" id="modal" onclick="closeModal()">
+  <button class="modal-close" onclick="closeModal()">&times;</button>
+  <img id="modalImg" src="">
 </div>
 
 <script>
-// ============================================================
-// DATA MODEL
-// ============================================================
+// ===========================
+// DATA
+// ===========================
 const DEFAULT_DATA = {
-  decisions: [
-    { id: 'd1', name: 'Shingle Color', status: 'not-started', value: '', notes: '', dateChosen: '', areas: ['roof'], blocks: ['roof-install'], options: [] },
-    { id: 'd2', name: 'Siding Color', status: 'not-started', value: '', notes: '', dateChosen: '', areas: ['siding'], blocks: ['siding-install'], options: [] },
-    { id: 'd3', name: 'Gutter Color', status: 'not-started', value: '', notes: '', dateChosen: '', areas: ['gutters'], blocks: ['gutter-install'], options: [] },
-    { id: 'd4', name: 'Soffit Paint Color', status: 'not-started', value: '', notes: '', dateChosen: '', areas: ['soffits'], blocks: ['soffit-prep', 'soffit-paint'], options: [] },
-    { id: 'd5', name: 'Eyebrow Awning Design', status: 'not-started', value: '', notes: '', dateChosen: '', areas: ['awning'], blocks: ['awning-fabricate'], options: [] },
-    { id: 'd6', name: 'Awning Dimensions', status: 'not-started', value: '', notes: '', dateChosen: '', areas: ['awning'], blocks: ['awning-fabricate'], options: [] },
-    { id: 'd7', name: 'Deck Repair Scope', status: 'not-started', value: '', notes: '', dateChosen: '', areas: ['deck'], blocks: ['deck-repair'], options: [] },
-    { id: 'd8', name: 'Contractor Scope & Responsibilities', status: 'not-started', value: '', notes: '', dateChosen: '', areas: ['roof','siding','gutters'], blocks: [], options: [] },
-  ],
-  areas: [
-    {
-      id: 'roof', name: 'Roof', status: 'not-started', priority: 'high',
-      estDays: '3-5', actualDays: '', assignedTo: 'contractor',
-      notes: 'Covered by insurance — just need to pay for wrappings', measurements: [{ label: 'Total sq ft', value: '' }, { label: 'Pitch', value: '' }, { label: 'Layers to remove', value: '' }],
-      budget: { estimated: '', actual: '', paid: false, vendor: '' },
-      tasks: [
-        { id: 'roof-inspect', name: 'Get roof inspected / assessed', done: false, status: 'not-started', estDays: '1', deps: [], notes: '', targetDate: '' },
-        { id: 'roof-quotes', name: 'Get contractor quotes', done: false, status: 'not-started', estDays: '3-5', deps: [], notes: '', targetDate: '' },
-        { id: 'roof-color', name: 'Choose shingle color', done: false, status: 'not-started', estDays: '1', deps: [], notes: '', targetDate: '' },
-        { id: 'roof-schedule', name: 'Schedule roof install date', done: false, status: 'not-started', estDays: '1', deps: ['roof-quotes', 'roof-color'], notes: '', targetDate: '' },
-        { id: 'roof-install', name: 'Roof installation', done: false, status: 'not-started', estDays: '3-5', deps: ['roof-schedule'], notes: '', targetDate: '' },
-        { id: 'roof-cleanup', name: 'Post-install inspection & cleanup', done: false, status: 'not-started', estDays: '1', deps: ['roof-install'], notes: '', targetDate: '' },
+  // The master flow — each step in order
+  steps: [
+    // DECIDE
+    { id: 'pick-colors', phase: 'Decide', title: 'Pick home exterior colors', sub: 'Siding, trim, accents — sets the palette', done: false,
+      decisions: [{ id: 'dc1', name: 'Siding color', value: '', status: 'not-started', options: [] }],
+      checks: [], notes: '', photos: [], guides: [], measurements: [] },
+
+    { id: 'soffit-color', phase: 'Decide', title: 'Pick soffit paint color', sub: 'Coordinate with siding & trim choice', done: false,
+      decisions: [{ id: 'dc2', name: 'Soffit color', value: '', status: 'not-started', options: [] }],
+      checks: [], notes: '', photos: [], guides: [
+        { title: 'DIY Guide to Painting Soffits (Beginner Tips + Video)', url: 'https://renovatedfaith.com/painting-exterior-trim-soffits-and-fascias/' },
+        { title: 'Tips for Painting Soffits — Handyman\'s Daughter', url: 'https://www.thehandymansdaughter.com/painting-soffits-and-fascia/' },
+      ], measurements: [] },
+
+    { id: 'awning-design', phase: 'Decide', title: 'Choose eyebrow awning design + dimensions', sub: 'Style, material, measure the garage opening', done: false,
+      decisions: [
+        { id: 'dc3', name: 'Awning style', value: '', status: 'not-started', options: [] },
+        { id: 'dc4', name: 'Awning material', value: '', status: 'not-started', options: [] },
       ],
-      photos: [],
-      guides: [
-        { title: 'How To Replace Roof Shingles (5-Step DIY)', url: 'https://meloroofing.com/how-to-replace-roof-shingles/' },
-        { title: 'How to Roof a House Yourself — Family Handyman', url: 'https://www.familyhandyman.com/project/how-to-roof-a-house/' },
-        { title: 'Fixing Damaged Shingles — This Old House', url: 'https://www.thisoldhouse.com/roofing/21015127/fixing-damaged-roof-shingles' },
-        { title: 'How to Replace Damaged Shingles — Family Handyman', url: 'https://www.familyhandyman.com/project/how-to-replace-damaged-shingles/' },
-        { title: 'DIY Roof Replacement Guide (11 Steps)', url: 'https://monarchroofing.biz/blog/diy-roof-replacement/' },
-        { title: 'Shingle Repair Tips — IKO', url: 'https://www.iko.com/na/blog/how-to-replace-missing-shingles/' },
-      ]
-    },
-    {
-      id: 'siding', name: 'Siding', status: 'not-started', priority: 'high',
-      estDays: '5-7', actualDays: '', assignedTo: 'contractor',
-      notes: 'Covered by insurance — just need to pay for wrappings', measurements: [{ label: 'Total sq ft', value: '' }, { label: 'Sections', value: '' }],
-      budget: { estimated: '', actual: '', paid: false, vendor: '' },
-      tasks: [
-        { id: 'siding-assess', name: 'Assess current siding condition', done: false, status: 'not-started', estDays: '1', deps: [], notes: '', targetDate: '' },
-        { id: 'siding-color', name: 'Choose siding color / material', done: false, status: 'not-started', estDays: '1', deps: [], notes: '', targetDate: '' },
-        { id: 'siding-quotes', name: 'Get contractor quotes', done: false, status: 'not-started', estDays: '3-5', deps: [], notes: '', targetDate: '' },
-        { id: 'siding-install', name: 'Siding installation', done: false, status: 'not-started', estDays: '5-7', deps: ['siding-color', 'siding-quotes', 'awning-install'], notes: 'Must wait for eyebrow awning to be installed first', targetDate: '' },
-        { id: 'siding-trim', name: 'Trim and finish work', done: false, status: 'not-started', estDays: '1-2', deps: ['siding-install'], notes: '', targetDate: '' },
+      checks: [
+        { id: 'aw1', text: 'Measure garage opening width', done: false },
+        { id: 'aw2', text: 'Decide projection depth (how far it sticks out)', done: false },
+        { id: 'aw3', text: 'Measure height from ground to mount point', done: false },
+        { id: 'aw4', text: 'Decide: open pergola vs solid roof', done: false },
       ],
-      photos: [],
-      guides: [
-        { title: 'How to Install Vinyl Siding — Home Depot', url: 'https://www.homedepot.com/c/ah/how-to-install-vinyl-siding/9ba683603be9fa5395fab9011029954e' },
-        { title: 'How to Install Vinyl Siding — Lowe\'s', url: 'https://www.lowes.com/n/how-to/install-vinyl-siding' },
-        { title: '13 Vinyl Siding Install Tips — Family Handyman', url: 'https://www.familyhandyman.com/list/vinyl-siding-install-tips/' },
-        { title: 'How to Install Vinyl Siding (2026 Guide)', url: 'https://barkleyjensenroofing.com/blog/how-to-install-vinyl-siding/' },
-        { title: 'How to Install Siding in 10 Steps', url: 'https://archexteriors.com/how-to-install-siding/' },
-        { title: 'Vinyl Siding Installation — CertainTeed', url: 'https://www.certainteed.com/how-to-install-vinyl-siding' },
-      ]
-    },
-    {
-      id: 'gutters', name: 'Gutters', status: 'not-started', priority: 'medium',
-      estDays: '1-2', actualDays: '', assignedTo: 'contractor',
-      notes: 'Covered by insurance — just need to pay for wrappings', measurements: [{ label: 'Linear ft', value: '' }, { label: 'Downspouts needed', value: '' }],
-      budget: { estimated: '', actual: '', paid: false, vendor: '' },
-      tasks: [
-        { id: 'gutter-color', name: 'Choose gutter color', done: false, status: 'not-started', estDays: '1', deps: [], notes: '', targetDate: '' },
-        { id: 'gutter-quotes', name: 'Get quotes', done: false, status: 'not-started', estDays: '3', deps: [], notes: '', targetDate: '' },
-        { id: 'gutter-install', name: 'Gutter installation', done: false, status: 'not-started', estDays: '1', deps: ['gutter-color', 'roof-install', 'siding-trim'], notes: 'After roof and siding complete', targetDate: '' },
-      ],
-      photos: [],
-      guides: [
-        { title: 'How to Install Rain Gutters (8 Steps) — This Old House', url: 'https://www.thisoldhouse.com/gutters/how-to-install-rain-gutters' },
-        { title: 'Gutter Replacement: How to Install Gutters — Family Handyman', url: 'https://www.familyhandyman.com/project/how-to-install-gutters/' },
-        { title: 'DIY Gutter Installation Step-by-Step — RoofScope', url: 'https://roofscope.com/how-to-install-gutters-yourself' },
-        { title: 'How to Install Gutters Yourself — Bob Vila', url: 'https://www.bobvila.com/exterior/how-to-install-rain-gutters/' },
-        { title: 'DIY Gutter Installation for Beginners', url: 'https://www.gutteritup.com/diy-gutter-installation-step-by-step-guide-for-beginners/' },
-      ]
-    },
-    {
-      id: 'soffits', name: 'Soffits', status: 'not-started', priority: 'high',
-      estDays: '1-2', actualDays: '', assignedTo: 'homeowner',
-      notes: 'Paint soffits before other exterior work begins', measurements: [{ label: 'Linear ft', value: '' }, { label: 'Condition', value: '' }],
-      budget: { estimated: '', actual: '', paid: false, vendor: '' },
-      tasks: [
-        { id: 'soffit-color', name: 'Choose soffit paint color', done: false, status: 'not-started', estDays: '1', deps: [], notes: '', targetDate: '' },
-        { id: 'soffit-prep', name: 'Prep soffits (clean, sand, prime)', done: false, status: 'not-started', estDays: '1', deps: ['soffit-color'], notes: '', targetDate: '' },
-        { id: 'soffit-paint', name: 'Paint soffits', done: false, status: 'not-started', estDays: '1-2', deps: ['soffit-prep'], notes: '', targetDate: '' },
-      ],
-      photos: [],
-      guides: [
-        { title: 'DIY Guide to Painting Soffits and Fascias (Beginner Tips + Video)', url: 'https://renovatedfaith.com/painting-exterior-trim-soffits-and-fascias/' },
-        { title: 'Tips for Painting Soffits and Fascia — Handyman\'s Daughter', url: 'https://www.thehandymansdaughter.com/painting-soffits-and-fascia/' },
-        { title: 'How to Paint Soffits With a Roller', url: 'https://legacy-applications.com/how-to-paint-soffits-with-a-roller/' },
-        { title: 'How to Repaint Your Soffit and Fascia', url: 'https://marcpoulospainting.com/how-to-repaint-your-soffit-and-fascia/' },
-        { title: 'Quick Guide to Painting Fascia and Soffits', url: 'https://guttercoverkc.com/painting-fascia-and-soffit/' },
-        { title: 'Things to Know Before Repainting Soffit and Fascia', url: 'https://florabrotherspainting.com/exterior-painting-tips/things-know-repainting-soffit-fascia/' },
-      ]
-    },
-    {
-      id: 'awning', name: 'Eyebrow Awning', status: 'not-started', priority: 'high',
-      estDays: '1-3', actualDays: '', assignedTo: 'mixed',
-      notes: 'Install over garage. Must complete before siding.', measurements: [{ label: 'Width', value: '' }, { label: 'Projection', value: '' }, { label: 'Height from ground', value: '' }],
-      budget: { estimated: '', actual: '', paid: false, vendor: '' },
-      tasks: [
-        { id: 'awning-measure', name: 'Measure awning location', done: false, status: 'not-started', estDays: '1', deps: [], notes: '', targetDate: '' },
-        { id: 'awning-design', name: 'Finalize awning design', done: false, status: 'not-started', estDays: '3-5', deps: [], notes: '', targetDate: '' },
-        { id: 'awning-fabricate', name: 'Order / fabricate awning', done: false, status: 'not-started', estDays: '7-14', deps: ['awning-measure', 'awning-design'], notes: '', targetDate: '' },
-        { id: 'awning-install', name: 'Install eyebrow awning', done: false, status: 'not-started', estDays: '1', deps: ['awning-fabricate', 'soffit-paint'], notes: 'After soffits painted', targetDate: '' },
-      ],
-      photos: [],
+      notes: '', photos: [],
+      measurements: [{ l: 'Garage width', v: '' }, { l: 'Projection', v: '' }, { l: 'Height from ground', v: '' }],
       guides: [
         { title: 'How to Build a Garage Door Pergola — This Old House', url: 'https://www.thisoldhouse.com/landscaping/21017376/how-to-build-a-garage-pergola' },
-        { title: 'How to Frame an Eyebrow on Garage — Garage Journal Forum', url: 'https://www.garagejournal.com/forum/threads/how-to-frame-an-eyebrow-on-garage.534699/' },
-        { title: 'Pergola Over Your Garage Door — Van Nuys Awning', url: 'https://www.vannuysawning.com/blog/pergola-over-garage-door/' },
-        { title: 'Timber Frame Eyebrow Roof — The Barn Yard', url: 'https://www.barnyard.com/blog/options/timber-frame-eyebrow-roof' },
-        { title: '19+ Stylish Garage Door Eyebrow Roof Ideas', url: 'https://willowandwall.com/blog/garage-door-eyebrow-roof-ideas/' },
-        { title: 'Eyebrow Style Awnings — Design Your Awning', url: 'https://designyourawning.com/pages/eyebrow-style-awnings' },
-        { title: 'TikTok: How to Build Eyebrow Roof Over Garage Door', url: 'https://www.tiktok.com/discover/how-to-build-an-eyebrow-roof-over-garage-door' },
-        { title: 'Where to Buy — Amazon Eyebrow Pergolas', url: 'https://www.amazon.com/eyebrow-pergola/s?k=eyebrow+pergola' },
-        { title: 'Where to Buy — Wayfair Eyebrow Awnings', url: 'https://www.wayfair.com/keyword.php?keyword=eyebrow+shaped+awning' },
-        { title: 'Where to Buy — Pergola Depot Visor Kits (from $3,330)', url: 'https://pergoladepot.com/product/visor-pergola-kit/' },
-        { title: 'Where to Buy — Sunset Pergola Kits (vinyl/aluminum)', url: 'https://sunsetpergolakits.com/collections/eyebrow-pergola-kits' },
-        { title: 'Where to Buy — Heartland Pergolas (vinyl)', url: 'https://heartlandpergolas.com/eyebrow-pergolas/' },
-        { title: 'Where to Buy — Etsy Custom/Handmade', url: 'https://www.etsy.com/market/eyebrow_pergola' },
-        { title: 'Where to Buy — Custom Copper/Steel — KM Sheet Metal', url: 'https://www.kmsheetmetal.com/shop/Eyebrow-Dormer-p375909965' },
-        { title: 'Inspiration — Pinterest: Garage Door Eyebrow', url: 'https://www.pinterest.com/ideas/garage-door-eyebrow/914414624386/' },
-        { title: 'Inspiration — Pinterest: Copper Awning Over Garage', url: 'https://www.pinterest.com/ideas/copper-awning-over-garage/936518797230/' },
-        { title: 'Inspiration — Pinterest: Black Metal Awning Modern Farmhouse', url: 'https://www.pinterest.com/ideas/black-metal-awning-modern-farmhouse/937832693110/' },
-      ]
-    },
-    {
-      id: 'deck', name: 'Deck', status: 'not-started', priority: 'medium',
-      estDays: '3-5', actualDays: '', assignedTo: 'mixed',
-      notes: 'Some deck work may need to happen before siding if it affects wall access', measurements: [{ label: 'Total sq ft', value: '' }, { label: 'Board ft to replace', value: '' }, { label: 'Railing linear ft', value: '' }],
-      budget: { estimated: '', actual: '', paid: false, vendor: '' },
-      tasks: [
-        { id: 'deck-assess', name: 'Assess deck damage & scope', done: false, status: 'not-started', estDays: '1', deps: [], notes: '', targetDate: '' },
-        { id: 'deck-scope', name: 'Finalize deck repair scope', done: false, status: 'not-started', estDays: '1', deps: ['deck-assess'], notes: '', targetDate: '' },
-        { id: 'deck-access', name: 'Complete deck work affecting house wall access', done: false, status: 'not-started', estDays: '1-2', deps: ['deck-scope'], notes: 'Must complete before siding', targetDate: '' },
-        { id: 'deck-repair', name: 'Deck board replacement / repair', done: false, status: 'not-started', estDays: '2-3', deps: ['deck-scope'], notes: '', targetDate: '' },
-        { id: 'deck-finish', name: 'Stain / seal / finish deck', done: false, status: 'not-started', estDays: '1-2', deps: ['deck-repair', 'siding-trim'], notes: 'After all house work complete', targetDate: '' },
+        { title: 'How to Frame an Eyebrow — Garage Journal Forum', url: 'https://www.garagejournal.com/forum/threads/how-to-frame-an-eyebrow-on-garage.534699/' },
+        { title: '19+ Garage Door Eyebrow Roof Ideas', url: 'https://willowandwall.com/blog/garage-door-eyebrow-roof-ideas/' },
+        { title: 'Eyebrow Awnings — Design Your Awning', url: 'https://designyourawning.com/pages/eyebrow-style-awnings' },
+        { title: 'Timber Frame Eyebrow Roof — Barn Yard', url: 'https://www.barnyard.com/blog/options/timber-frame-eyebrow-roof' },
+        { cat: 'Where to Buy', title: 'Amazon Eyebrow Pergolas', url: 'https://www.amazon.com/eyebrow-pergola/s?k=eyebrow+pergola' },
+        { cat: 'Where to Buy', title: 'Wayfair Eyebrow Awnings', url: 'https://www.wayfair.com/keyword.php?keyword=eyebrow+shaped+awning' },
+        { cat: 'Where to Buy', title: 'Pergola Depot Visor Kits (from $3,330)', url: 'https://pergoladepot.com/product/visor-pergola-kit/' },
+        { cat: 'Where to Buy', title: 'Etsy Custom/Handmade', url: 'https://www.etsy.com/market/eyebrow_pergola' },
+        { cat: 'Inspiration', title: 'Pinterest: Garage Door Eyebrow', url: 'https://www.pinterest.com/ideas/garage-door-eyebrow/914414624386/' },
+        { cat: 'Inspiration', title: 'Pinterest: Copper Awning Over Garage', url: 'https://www.pinterest.com/ideas/copper-awning-over-garage/936518797230/' },
+        { cat: 'Inspiration', title: 'Pinterest: Black Metal Awning Farmhouse', url: 'https://www.pinterest.com/ideas/black-metal-awning-modern-farmhouse/937832693110/' },
+      ] },
+
+    { id: 'deck-scope', phase: 'Decide', title: 'Finalize deck repair scope', sub: 'What gets replaced vs patched', done: false,
+      decisions: [{ id: 'dc5', name: 'Deck scope', value: '', status: 'not-started', options: [] }],
+      checks: [
+        { id: 'dk1', text: 'Walk deck — mark bad boards', done: false },
+        { id: 'dk2', text: 'Check joists underneath', done: false },
+        { id: 'dk3', text: 'Decide on rails — keep, replace, or remove', done: false },
+        { id: 'dk4', text: 'Pick stain color', done: false },
       ],
-      photos: [],
+      notes: '', photos: [],
+      measurements: [{ l: 'Deck sq ft', v: '' }, { l: 'Boards to replace', v: '' }, { l: 'Railing linear ft', v: '' }],
       guides: [
-        { title: 'How to Repair a Deck: Replace Boards, Joists — Angi', url: 'https://www.angi.com/articles/how-to-repair-deck.htm' },
-        { title: 'How to Replace Deck Boards — Decks.com', url: 'https://www.decks.com/resource-index/decking/how-to-replace-deck-boards/' },
+        { title: 'How to Repair a Deck — Angi', url: 'https://www.angi.com/articles/how-to-repair-deck.htm' },
         { title: 'How to Restore a Weathered Deck — This Old House', url: 'https://www.thisoldhouse.com/decking/21164885/how-to-restore-a-weathered-deck' },
-        { title: 'How to Revive a Deck: Cleaning and Staining — Family Handyman', url: 'https://www.familyhandyman.com/project/how-to-revive-a-deck/' },
-        { title: 'How to Replace Deck Boards Like a Pro — Woodrich', url: 'https://woodrichbrand.com/how-to-replace-deck-boards-like-a-pro/' },
-        { title: 'How to Replace Deck Boards (8 DIY Steps) — Angi', url: 'https://www.angi.com/articles/how-to-replace-deck-boards.htm' },
-        { title: 'Repair Your Deck with DIY Steps — Ergeon', url: 'https://www.ergeon.com/blog/post/deck-repair' },
-      ]
-    },
+        { title: 'How to Revive a Deck — Family Handyman', url: 'https://www.familyhandyman.com/project/how-to-revive-a-deck/' },
+        { title: 'How to Replace Deck Boards — Decks.com', url: 'https://www.decks.com/resource-index/decking/how-to-replace-deck-boards/' },
+      ] },
+
+    // BUY
+    { id: 'menards-run', phase: 'Buy', title: 'Menards run — buy everything at once', sub: 'All soffit, awning, and deck materials in one trip', done: false,
+      decisions: [], checks: [], notes: 'Check the Shopping List tab for the full list', photos: [], guides: [], measurements: [] },
+
+    // BUILD
+    { id: 'soffit-paint', phase: 'Build', title: 'Prep + paint soffits', sub: 'Clean, sand, mask, prime, spray 2 coats', done: false,
+      decisions: [],
+      checks: [
+        { id: 'sp1', text: 'Clean soffits with TSP', done: false },
+        { id: 'sp2', text: 'Sand / scuff old paint', done: false },
+        { id: 'sp3', text: 'Caulk gaps and nail holes', done: false },
+        { id: 'sp4', text: 'Mask off walls, fascia, gutters, windows', done: false },
+        { id: 'sp5', text: 'Lay drop cloths', done: false },
+        { id: 'sp6', text: 'Strain paint into bucket', done: false },
+        { id: 'sp7', text: 'Spray primer coat', done: false },
+        { id: 'sp8', text: 'Spray paint coat 1', done: false },
+        { id: 'sp9', text: 'Spray paint coat 2', done: false },
+        { id: 'sp10', text: 'Touch up with brush', done: false },
+        { id: 'sp11', text: 'Remove masking', done: false },
+        { id: 'sp12', text: 'Clean sprayer', done: false },
+      ],
+      notes: 'Must be done before awning install', photos: [], guides: [
+        { title: 'DIY Painting Soffits (Video)', url: 'https://renovatedfaith.com/painting-exterior-trim-soffits-and-fascias/' },
+        { title: 'Paint Soffits With a Roller', url: 'https://legacy-applications.com/how-to-paint-soffits-with-a-roller/' },
+        { title: 'Tips for Painting Soffits — Handyman\'s Daughter', url: 'https://www.thehandymansdaughter.com/painting-soffits-and-fascia/' },
+      ], measurements: [] },
+
+    { id: 'awning-build', phase: 'Build', title: 'Build + install eyebrow awning', sub: 'Ledger, rafters, flash it. Before siding.', done: false,
+      decisions: [],
+      checks: [
+        { id: 'ab1', text: 'Cut lumber to size', done: false },
+        { id: 'ab2', text: 'Mount ledger board to wall', done: false },
+        { id: 'ab3', text: 'Install angle brackets / rafter hangers', done: false },
+        { id: 'ab4', text: 'Attach rafters', done: false },
+        { id: 'ab5', text: 'Add top slats or roofing', done: false },
+        { id: 'ab6', text: 'Install flashing where awning meets wall', done: false },
+        { id: 'ab7', text: 'Stain / paint awning', done: false },
+      ],
+      notes: 'Must be done before siding crew arrives', photos: [], guides: [
+        { title: 'How to Build a Garage Pergola — This Old House', url: 'https://www.thisoldhouse.com/landscaping/21017376/how-to-build-a-garage-pergola' },
+        { title: 'How to Frame an Eyebrow — Garage Journal', url: 'https://www.garagejournal.com/forum/threads/how-to-frame-an-eyebrow-on-garage.534699/' },
+        { title: 'Pergola Over Garage Door — Van Nuys Awning', url: 'https://www.vannuysawning.com/blog/pergola-over-garage-door/' },
+      ], measurements: [] },
+
+    { id: 'deck-walls', phase: 'Build', title: 'Deck work near house walls', sub: 'Sections that affect wall access — before siding', done: false,
+      decisions: [], checks: [
+        { id: 'dw1', text: 'Remove boards near house wall', done: false },
+        { id: 'dw2', text: 'Inspect/repair joists at wall', done: false },
+        { id: 'dw3', text: 'Install new boards at wall', done: false },
+      ],
+      notes: '', photos: [], guides: [], measurements: [] },
+
+    // CONTRACTOR
+    { id: 'contractor', phase: 'Contractor', title: 'Roof + siding + gutters', sub: 'Contractor handles all three — covered by insurance', done: false,
+      decisions: [], checks: [
+        { id: 'ct1', text: 'Contractor scheduled', done: false },
+        { id: 'ct2', text: 'Roof done', done: false },
+        { id: 'ct3', text: 'Siding done', done: false },
+        { id: 'ct4', text: 'Gutters done', done: false },
+        { id: 'ct5', text: 'Final inspection with contractor', done: false },
+      ],
+      notes: '', photos: [], guides: [], measurements: [] },
+
+    // FINISH
+    { id: 'deck-finish', phase: 'Finish', title: 'Deck repair + stain', sub: 'Replace boards, sand, clean, stain', done: false,
+      decisions: [],
+      checks: [
+        { id: 'df1', text: 'Replace damaged boards', done: false },
+        { id: 'df2', text: 'Sand new boards (remove mill glaze)', done: false },
+        { id: 'df3', text: 'Seal cut ends with preservative', done: false },
+        { id: 'df4', text: 'Clean entire deck', done: false },
+        { id: 'df5', text: 'Let dry completely', done: false },
+        { id: 'df6', text: 'Stain / seal deck', done: false },
+      ],
+      notes: '', photos: [], guides: [
+        { title: 'How to Restore a Weathered Deck — This Old House', url: 'https://www.thisoldhouse.com/decking/21164885/how-to-restore-a-weathered-deck' },
+        { title: 'How to Revive a Deck — Family Handyman', url: 'https://www.familyhandyman.com/project/how-to-revive-a-deck/' },
+      ], measurements: [] },
+
+    { id: 'walkthrough', phase: 'Finish', title: 'Final walkthrough', sub: 'Touch-ups, cleanup, done', done: false,
+      decisions: [], checks: [
+        { id: 'fw1', text: 'Walk entire exterior', done: false },
+        { id: 'fw2', text: 'Touch up paint where needed', done: false },
+        { id: 'fw3', text: 'Clean up job site', done: false },
+      ],
+      notes: '', photos: [], guides: [], measurements: [] },
   ],
-  materials: [
-    { id: 'm1', item: 'Shingles', area: 'roof', qty: '', unit: 'bundles', supplier: '', suppliedBy: 'contractor', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm2', item: 'Siding panels', area: 'siding', qty: '', unit: 'sq ft', supplier: '', suppliedBy: 'contractor', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm3', item: 'Gutters', area: 'gutters', qty: '', unit: 'linear ft', supplier: '', suppliedBy: 'contractor', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm4', item: 'Soffit paint', area: 'soffits', qty: '', unit: 'gallons', supplier: '', suppliedBy: 'homeowner', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm5', item: 'Soffit primer', area: 'soffits', qty: '', unit: 'gallons', supplier: '', suppliedBy: 'homeowner', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm6', item: 'Sandpaper / prep supplies', area: 'soffits', qty: '', unit: 'pack', supplier: '', suppliedBy: 'homeowner', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm7', item: 'Eyebrow awning (custom)', area: 'awning', qty: '1', unit: 'unit', supplier: '', suppliedBy: 'homeowner', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm8', item: 'Deck boards', area: 'deck', qty: '', unit: 'board ft', supplier: '', suppliedBy: 'homeowner', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm9', item: 'Deck stain / sealant', area: 'deck', qty: '', unit: 'gallons', supplier: '', suppliedBy: 'homeowner', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-    { id: 'm10', item: 'Deck screws / hardware', area: 'deck', qty: '', unit: 'box', supplier: '', suppliedBy: 'homeowner', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: '' },
-  ],
-  globalNotes: 'Project notes:\n\n- \n',
-  activityLog: [],
-  photos: [],
+
   shoppingList: [
-    // Soffit Painting (sprayer + big ladder)
-    { id: 's1', name: 'Exterior primer (Zinsser Bulls Eye 1-2-3)', qty: '1 gallon', area: 'soffits', bought: false, notes: 'Water-based, bonds to glossy surfaces. Thin slightly if needed for sprayer.' },
-    { id: 's2', name: 'Exterior paint (satin or semi-gloss)', qty: '1.5-2 gallons', area: 'soffits', bought: false, notes: 'Color TBD. Get extra — sprayer uses more than rolling. May need 2 coats.' },
-    { id: 's3', name: 'Airless paint sprayer', qty: '1', area: 'soffits', bought: false, notes: 'Graco TrueCoat 360 Dual Speed (~$180) — sprays upside down, perfect for soffits. OR Titan ControlMax 1700 (~$300) if you want to reuse for deck stain too.' },
-    { id: 's4', name: 'Sprayer tip (411 or 413)', qty: '1 extra', area: 'soffits', bought: false, notes: 'Tips wear — grab a spare. 411 = 8" fan width, 413 = 10" fan.' },
-    { id: 's5', name: 'Sprayer tip extension (20" or 40")', qty: '1', area: 'soffits', bought: false, notes: 'Graco extension — reach soffits without full arm stretch on ladder' },
-    { id: 's6', name: 'Extension ladder (20 or 24 ft)', qty: '1', area: 'soffits', bought: false, notes: 'Keller KPro fiberglass 300 lb Type IA. 20ft for 1-story, 24ft for 2-story. Fiberglass safer near power lines.' },
-    { id: 's7', name: 'Sandpaper (120 & 220 grit)', qty: '1 pack each', area: 'soffits', bought: false, notes: 'Scuff old paint before priming for better adhesion' },
-    { id: 's8', name: 'TSP cleaner (trisodium phosphate)', qty: '1 box', area: 'soffits', bought: false, notes: 'Mix with water — clean soffits before painting' },
-    { id: 's9', name: 'Painters tape (2")', qty: '3-4 rolls', area: 'soffits', bought: false, notes: 'Sprayer needs MORE masking than rolling — tape off fascia, walls, gutters' },
-    { id: 's10', name: 'Plastic sheeting / masking film', qty: '1 roll', area: 'soffits', bought: false, notes: 'CRITICAL with sprayer — cover walls, windows, garage door, anything you dont want painted' },
-    { id: 's11', name: 'Drop cloths', qty: '3-4', area: 'soffits', bought: false, notes: 'Cover ground, bushes, walkways. Sprayer overspray is real.' },
-    { id: 's12', name: 'Angled trim brush (2")', qty: '1', area: 'soffits', bought: false, notes: 'For touch-ups and tight corners sprayer cant reach' },
-    { id: 's13', name: 'Caulk (paintable exterior)', qty: '1 tube', area: 'soffits', bought: false, notes: 'Fill gaps and nail holes before painting' },
-    { id: 's14', name: 'Caulk gun', qty: '1', area: 'soffits', bought: false, notes: 'Skip if you already have one' },
-    { id: 's15', name: '5 gallon bucket', qty: '1', area: 'soffits', bought: false, notes: 'For mixing/straining paint before pouring into sprayer' },
-    { id: 's16', name: 'Paint strainer bags (5 gal size)', qty: '1 pack', area: 'soffits', bought: false, notes: 'Strain paint into bucket before spraying — prevents tip clogs' },
-    { id: 's17', name: 'Mineral spirits or pump armor', qty: '1', area: 'soffits', bought: false, notes: 'For cleaning sprayer after use. Pump armor for storage.' },
+    // Soffit Painting
+    { id: 's1', name: 'Exterior primer (Zinsser 1-2-3)', qty: '1 gallon', area: 'Soffits', bought: false, notes: 'Thin slightly for sprayer' },
+    { id: 's2', name: 'Exterior paint (satin or semi-gloss)', qty: '1.5-2 gallons', area: 'Soffits', bought: false, notes: 'Color TBD. Extra for sprayer overspray.' },
+    { id: 's3', name: 'Airless paint sprayer', qty: '1', area: 'Soffits', bought: false, notes: 'Graco TrueCoat 360 (~$180) or Titan ControlMax 1700 (~$300)' },
+    { id: 's4', name: 'Sprayer tip (411 or 413)', qty: '1 extra', area: 'Soffits', bought: false, notes: 'Grab a spare — tips wear out' },
+    { id: 's5', name: 'Sprayer tip extension (20-40")', qty: '1', area: 'Soffits', bought: false, notes: 'Reach soffits from ladder without arm strain' },
+    { id: 's6', name: 'Extension ladder (20 or 24 ft)', qty: '1', area: 'Soffits', bought: false, notes: 'Keller KPro fiberglass 300lb Type IA' },
+    { id: 's7', name: 'Sandpaper (120 & 220 grit)', qty: '1 pack each', area: 'Soffits', bought: false, notes: '' },
+    { id: 's8', name: 'TSP cleaner', qty: '1 box', area: 'Soffits', bought: false, notes: '' },
+    { id: 's9', name: 'Painters tape (2")', qty: '3-4 rolls', area: 'Soffits', bought: false, notes: 'Sprayer needs extra masking' },
+    { id: 's10', name: 'Plastic sheeting / masking film', qty: '1 roll', area: 'Soffits', bought: false, notes: 'Cover walls, windows, garage door' },
+    { id: 's11', name: 'Drop cloths', qty: '3-4', area: 'Soffits', bought: false, notes: '' },
+    { id: 's12', name: 'Angled trim brush (2")', qty: '1', area: 'Soffits', bought: false, notes: 'Touch-ups' },
+    { id: 's13', name: 'Caulk (paintable exterior) + gun', qty: '1 tube + gun', area: 'Soffits', bought: false, notes: '' },
+    { id: 's14', name: '5 gal bucket + paint strainer bags', qty: '1 + 1 pack', area: 'Soffits', bought: false, notes: 'Strain before spraying' },
+    { id: 's15', name: 'Mineral spirits / pump armor', qty: '1', area: 'Soffits', bought: false, notes: 'Sprayer cleanup' },
 
     // Eyebrow Awning
-    { id: 'a1', name: '2x8 treated lumber (beams)', qty: 'TBD — measure first', area: 'awning', bought: false, notes: 'Ledger board + support beams. Length depends on garage width.' },
-    { id: 'a2', name: '2x6 treated lumber (rafters)', qty: 'TBD — measure first', area: 'awning', bought: false, notes: 'Notched rafters, spaced 16" OC' },
-    { id: 'a3', name: '2x2 cedar or treated (top slats)', qty: 'TBD', area: 'awning', bought: false, notes: 'Decorative top pieces' },
-    { id: 'a4', name: 'Structural screws (GRK or similar, 4")', qty: '1 box', area: 'awning', bought: false, notes: 'For ledger board to house framing' },
-    { id: 'a5', name: 'Lag bolts (3/8" x 4" or 5")', qty: '8-12', area: 'awning', bought: false, notes: 'Secure ledger to wall studs or header' },
-    { id: 'a6', name: 'Heavy-duty angle brackets / rafter hangers', qty: '6-8', area: 'awning', bought: false, notes: 'Simpson Strong-Tie or similar' },
-    { id: 'a7', name: 'Flashing (aluminum, 4-6" wide)', qty: '1 roll or cut to length', area: 'awning', bought: false, notes: 'CRITICAL — prevents water intrusion where awning meets wall' },
-    { id: 'a8', name: 'Exterior wood stain or paint', qty: '1 quart or gallon', area: 'awning', bought: false, notes: 'Match house trim color' },
-    { id: 'a9', name: 'Roofing material (optional: metal panels or shingles)', qty: 'TBD', area: 'awning', bought: false, notes: 'If adding a solid roof vs open pergola style' },
-    { id: 'a10', name: 'Drip edge (if adding roofing)', qty: '1 piece', area: 'awning', bought: false, notes: '' },
-    { id: 'a11', name: 'Construction adhesive (exterior)', qty: '1 tube', area: 'awning', bought: false, notes: 'PL Premium or similar' },
+    { id: 'a1', name: '2x8 treated lumber (beams)', qty: 'TBD', area: 'Awning', bought: false, notes: 'Measure first' },
+    { id: 'a2', name: '2x6 treated lumber (rafters)', qty: 'TBD', area: 'Awning', bought: false, notes: 'Spaced 16" OC' },
+    { id: 'a3', name: '2x2 cedar or treated (top slats)', qty: 'TBD', area: 'Awning', bought: false, notes: '' },
+    { id: 'a4', name: 'Structural screws (GRK, 4")', qty: '1 box', area: 'Awning', bought: false, notes: '' },
+    { id: 'a5', name: 'Lag bolts (3/8" x 4-5")', qty: '8-12', area: 'Awning', bought: false, notes: 'Ledger to wall studs' },
+    { id: 'a6', name: 'Angle brackets / rafter hangers', qty: '6-8', area: 'Awning', bought: false, notes: 'Simpson Strong-Tie' },
+    { id: 'a7', name: 'Flashing (aluminum, 4-6")', qty: '1 roll', area: 'Awning', bought: false, notes: 'CRITICAL — prevents water behind wall' },
+    { id: 'a8', name: 'Exterior stain or paint', qty: '1 quart', area: 'Awning', bought: false, notes: 'Match trim color' },
+    { id: 'a9', name: 'Construction adhesive', qty: '1 tube', area: 'Awning', bought: false, notes: 'PL Premium' },
 
-    // Deck Repair
-    { id: 'dk1', name: 'Deck boards (5/4 x 6 treated or cedar)', qty: 'TBD — measure damaged areas', area: 'deck', bought: false, notes: 'Match existing board width and thickness' },
-    { id: 'dk2', name: 'Deck screws (#10 x 2-3/4" coated)', qty: '1 lb box', area: 'deck', bought: false, notes: 'Star drive / Torx head — way easier than Phillips' },
-    { id: 'dk3', name: 'Deck stain (semi-transparent or solid)', qty: 'TBD — measure sq ft', area: 'deck', bought: false, notes: 'Cabot, TWP, or Olympic. Color TBD.' },
-    { id: 'dk4', name: 'Deck cleaner / brightener', qty: '1 gallon', area: 'deck', bought: false, notes: 'Clean before staining — removes dirt, mildew, gray' },
-    { id: 'dk5', name: 'Stain applicator pad or roller', qty: '1', area: 'deck', bought: false, notes: 'Pad applicator is fastest for deck staining' },
-    { id: 'dk6', name: 'Paintbrush (4" for stain)', qty: '1', area: 'deck', bought: false, notes: 'For rails, between boards, edges' },
-    { id: 'dk7', name: 'Wood filler (exterior, Cabot)', qty: '1 tube', area: 'deck', bought: false, notes: 'Fill small cracks/holes vs replacing boards' },
-    { id: 'dk8', name: 'Sandpaper (80 grit)', qty: '1 pack', area: 'deck', bought: false, notes: 'Sand new boards to remove mill glaze before staining' },
-    { id: 'dk9', name: 'Pry bar / flat bar', qty: '1', area: 'deck', bought: false, notes: 'For pulling old boards and nails' },
-    { id: 'dk10', name: 'Drill/driver bits (star/Torx T25)', qty: '1 pack', area: 'deck', bought: false, notes: 'Match your deck screws' },
-    { id: 'dk11', name: 'Wood preservative (end cut sealer)', qty: '1 quart', area: 'deck', bought: false, notes: 'Seal cut ends of new boards — prevents rot' },
-    { id: 'dk12', name: 'Garden hose sprayer nozzle', qty: '1', area: 'deck', bought: false, notes: 'For rinsing deck cleaner — or rent pressure washer' },
+    // Deck
+    { id: 'd1', name: 'Deck boards (5/4 x 6 treated)', qty: 'TBD', area: 'Deck', bought: false, notes: 'Match existing board size' },
+    { id: 'd2', name: 'Deck screws (#10 x 2-3/4" coated)', qty: '1 lb box', area: 'Deck', bought: false, notes: 'Star/Torx drive' },
+    { id: 'd3', name: 'Deck stain', qty: 'TBD', area: 'Deck', bought: false, notes: 'Cabot, TWP, or Olympic' },
+    { id: 'd4', name: 'Deck cleaner / brightener', qty: '1 gallon', area: 'Deck', bought: false, notes: '' },
+    { id: 'd5', name: 'Stain applicator pad', qty: '1', area: 'Deck', bought: false, notes: 'Fastest for deck staining' },
+    { id: 'd6', name: 'Paintbrush (4")', qty: '1', area: 'Deck', bought: false, notes: 'Rails, edges, between boards' },
+    { id: 'd7', name: 'Wood filler (exterior)', qty: '1 tube', area: 'Deck', bought: false, notes: '' },
+    { id: 'd8', name: 'Sandpaper (80 grit)', qty: '1 pack', area: 'Deck', bought: false, notes: 'Sand new boards' },
+    { id: 'd9', name: 'Pry bar / flat bar', qty: '1', area: 'Deck', bought: false, notes: '' },
+    { id: 'd10', name: 'Torx bits (T25)', qty: '1 pack', area: 'Deck', bought: false, notes: '' },
+    { id: 'd11', name: 'End cut sealer', qty: '1 quart', area: 'Deck', bought: false, notes: 'Seal cut ends' },
   ],
+
+  globalNotes: '',
+  globalPhotos: [],
+  log: [],
 };
 
-// ============================================================
+// ===========================
 // STATE
-// ============================================================
-let data = loadData();
-let activeTab = 'dashboard';
-let filterStatus = 'all';
-let filterArea = 'all';
-let filterAssigned = 'all';
-
-function loadData() {
+// ===========================
+let D, tab = 'flow';
+function load() {
   try {
-    const saved = localStorage.getItem('renovation-planner');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      // Ensure all fields exist
-      if (!parsed.activityLog) parsed.activityLog = [];
-      if (!parsed.photos) parsed.photos = [];
-      if (!parsed.globalNotes) parsed.globalNotes = '';
-      // Refresh shopping list if it has the old roller-based items or is empty
-      if (!parsed.shoppingList || parsed.shoppingList.length === 0 || (parsed.shoppingList.find(i => i.id === 's3') && parsed.shoppingList.find(i => i.id === 's3').name.includes('roller'))) {
-        parsed.shoppingList = JSON.parse(JSON.stringify(DEFAULT_DATA.shoppingList));
-      }
-      parsed.decisions.forEach(d => {
-        if (!d.options) d.options = [];
-      });
-      parsed.areas.forEach(a => {
-        if (!a.measurements) a.measurements = [];
-        if (!a.budget) a.budget = { estimated: '', actual: '', paid: false, vendor: '' };
-        if (!a.photos) a.photos = [];
-        // Merge guides from defaults (always use latest)
-        const defaultArea = DEFAULT_DATA.areas.find(da => da.id === a.id);
-        if (defaultArea && defaultArea.guides) a.guides = defaultArea.guides;
-      });
-      return parsed;
-    }
+    const s = localStorage.getItem('reno-v2');
+    if (s) { D = JSON.parse(s); if (!D.log) D.log = []; if (!D.globalPhotos) D.globalPhotos = []; if (!D.shoppingList) D.shoppingList = DEFAULT_DATA.shoppingList; return; }
   } catch(e) {}
-  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+  D = JSON.parse(JSON.stringify(DEFAULT_DATA));
 }
-
-function saveData() {
-  localStorage.setItem('renovation-planner', JSON.stringify(data));
-}
-
-function addLog(msg) {
-  data.activityLog.unshift({ date: new Date().toLocaleString(), msg });
-  if (data.activityLog.length > 100) data.activityLog.length = 100;
-  saveData();
-}
-
-// ============================================================
-// HELPERS
-// ============================================================
+load();
+function save() { localStorage.setItem('reno-v2', JSON.stringify(D)); }
+function addLog(m) { D.log.unshift({ d: new Date().toLocaleString(), m }); if (D.log.length > 100) D.log.length = 100; save(); }
 function uid() { return 'id_' + Math.random().toString(36).substr(2, 9); }
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-function statusClass(s) {
-  const map = {
-    'not-started': 'badge-not-started',
-    'researching': 'badge-researching',
-    'waiting-on-decision': 'badge-waiting',
-    'ready': 'badge-ready',
-    'in-progress': 'badge-in-progress',
-    'blocked': 'badge-blocked',
-    'completed': 'badge-completed',
-    'chosen': 'badge-chosen',
-  };
-  return map[s] || 'badge-not-started';
-}
+// Track which steps are expanded
+let expanded = {};
 
-function statusLabel(s) {
-  return (s || 'not-started').replace(/-/g, ' ');
-}
-
-function getAllTasks() {
-  const tasks = [];
-  data.areas.forEach(a => {
-    a.tasks.forEach(t => {
-      tasks.push({ ...t, areaId: a.id, areaName: a.name });
-    });
-  });
-  return tasks;
-}
-
-function isTaskBlocked(task) {
-  if (!task.deps || task.deps.length === 0) return false;
-  const allTasks = getAllTasks();
-  return task.deps.some(depId => {
-    const dep = allTasks.find(t => t.id === depId);
-    return dep && !dep.done;
-  });
-}
-
-function getBlockedBy(task) {
-  if (!task.deps || task.deps.length === 0) return [];
-  const allTasks = getAllTasks();
-  return task.deps.filter(depId => {
-    const dep = allTasks.find(t => t.id === depId);
-    return dep && !dep.done;
-  }).map(depId => {
-    const dep = allTasks.find(t => t.id === depId);
-    return dep ? dep.name : depId;
-  });
-}
-
-function getNextTasks() {
-  const allTasks = getAllTasks();
-  return allTasks.filter(t => !t.done && !isTaskBlocked(t) && t.status !== 'completed')
-    .sort((a, b) => {
-      const area_a = data.areas.find(ar => ar.id === a.areaId);
-      const area_b = data.areas.find(ar => ar.id === b.areaId);
-      const prio = { high: 0, medium: 1, low: 2 };
-      return (prio[area_a?.priority] || 1) - (prio[area_b?.priority] || 1);
-    });
-}
-
-function getBlockedTasks() {
-  return getAllTasks().filter(t => !t.done && isTaskBlocked(t));
-}
-
-function getPendingDecisions() {
-  return data.decisions.filter(d => d.status !== 'chosen');
-}
-
-function getUnorderedMaterials() {
-  return data.materials.filter(m => m.orderStatus === 'not-ordered');
-}
-
-// ============================================================
+// ===========================
 // RENDER
-// ============================================================
+// ===========================
 const TABS = [
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'decisions', label: 'Decisions' },
-  { id: 'roof', label: 'Roof' },
-  { id: 'siding', label: 'Siding' },
-  { id: 'gutters', label: 'Gutters' },
-  { id: 'soffits', label: 'Soffits' },
-  { id: 'awning', label: 'Eyebrow Awning' },
-  { id: 'deck', label: 'Deck' },
-  { id: 'materials', label: 'Materials' },
-  { id: 'shopping', label: 'Shopping List' },
-  { id: 'notes', label: 'Notes & Photos' },
-  { id: 'timeline', label: 'Timeline' },
-  { id: 'log', label: 'Activity Log' },
+  { id: 'flow', l: 'The Plan' },
+  { id: 'shopping', l: 'Shopping List' },
+  { id: 'notes', l: 'Notes & Photos' },
+  { id: 'log', l: 'Activity Log' },
 ];
 
 function render() {
-  renderNav();
-  renderContent();
-}
-
-function renderNav() {
-  const nav = document.getElementById('navTabs');
-  nav.innerHTML = TABS.map(t =>
-    `<button class="nav-tab ${activeTab === t.id ? 'active' : ''}" onclick="switchTab('${t.id}')">${t.label}</button>`
+  document.getElementById('tabs').innerHTML = TABS.map(t =>
+    `<button class="tab${tab === t.id ? ' on' : ''}" onclick="tab='${t.id}';render()">${t.l}</button>`
   ).join('');
+  const c = document.getElementById('content');
+  if (tab === 'flow') c.innerHTML = renderFlow();
+  else if (tab === 'shopping') c.innerHTML = renderShopping();
+  else if (tab === 'notes') c.innerHTML = renderNotes();
+  else if (tab === 'log') c.innerHTML = renderLog();
 }
 
-function switchTab(id) {
-  activeTab = id;
-  render();
-}
+// ---- The Plan (main flow) ----
+function renderFlow() {
+  const total = D.steps.length;
+  const done = D.steps.filter(s => s.done).length;
+  const totalChecks = D.steps.reduce((n, s) => n + s.checks.length, 0);
+  const doneChecks = D.steps.reduce((n, s) => n + s.checks.filter(c => c.done).length, 0);
+  const toBuy = D.shoppingList.filter(i => !i.bought).length;
 
-function renderContent() {
-  const el = document.getElementById('tabContents');
-  switch(activeTab) {
-    case 'dashboard': el.innerHTML = renderDashboard(); break;
-    case 'decisions': el.innerHTML = renderDecisions(); break;
-    case 'materials': el.innerHTML = renderMaterials(); break;
-    case 'shopping': el.innerHTML = renderShopping(); break;
-    case 'notes': el.innerHTML = renderNotes(); break;
-    case 'timeline': el.innerHTML = renderTimeline(); break;
-    case 'log': el.innerHTML = renderActivityLog(); break;
-    default:
-      const area = data.areas.find(a => a.id === activeTab);
-      if (area) el.innerHTML = renderArea(area);
-      break;
-  }
-}
-
-// ---- Dashboard ----
-function renderDashboard() {
-  const allTasks = getAllTasks();
-  const total = allTasks.length;
-  const completed = allTasks.filter(t => t.done).length;
-  const inProgress = allTasks.filter(t => t.status === 'in-progress').length;
-  const blocked = getBlockedTasks().length;
-  const pendingDec = getPendingDecisions().length;
-  const nextTasks = getNextTasks().slice(0, 5);
-  const blockedTasks = getBlockedTasks().slice(0, 5);
-  const unordered = getUnorderedMaterials();
-
-  return `
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-number">${data.areas.length}</div><div class="stat-label">Project Areas</div></div>
-      <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Total Tasks</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:var(--accent)">${completed}</div><div class="stat-label">Completed</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:#e8a838">${inProgress}</div><div class="stat-label">In Progress</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:var(--blocked)">${blocked}</div><div class="stat-label">Blocked</div></div>
-      <div class="stat-card"><div class="stat-number" style="color:var(--warning)">${pendingDec}</div><div class="stat-label">Open Decisions</div></div>
-      <div class="stat-card" style="cursor:pointer" onclick="activeTab='shopping';render()"><div class="stat-number" style="color:#2980b9">${(data.shoppingList||[]).filter(i=>!i.bought).length}</div><div class="stat-label">To Buy</div></div>
+  let curPhase = '';
+  let html = `
+    <div class="stats">
+      <div class="stat"><b>${done}/${total}</b><small>Steps Done</small></div>
+      <div class="stat"><b>${doneChecks}/${totalChecks}</b><small>Tasks Done</small></div>
+      <div class="stat"><b style="color:var(--ready)">${toBuy}</b><small>To Buy</small></div>
     </div>
-
-    ${blockedTasks.length ? `
-    <div class="alerts">
-      ${blockedTasks.map(t => `
-        <div class="alert alert-blocked">
-          <strong>${t.name}</strong> (${t.areaName}) — blocked by: ${getBlockedBy(t).join(', ')}
-        </div>
-      `).join('')}
-    </div>` : ''}
-
-    <div class="next-up">
-      <h3>Next Available Tasks</h3>
-      ${nextTasks.length ? nextTasks.map(t => `
-        <div class="next-up-item">
-          <span class="area-tag">${t.areaName}</span>
-          <span>${t.name}</span>
-        </div>
-      `).join('') : '<div style="color:var(--text-light);font-size:14px">All tasks are either completed or blocked. Check the Decisions tab.</div>'}
-    </div>
-
-    ${pendingDec ? `
-    <div class="card">
-      <div class="card-header expanded"><h2>Decisions Needed</h2></div>
-      <div class="card-body open">
-        ${getPendingDecisions().slice(0, 5).map(d => `
-          <div style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:14px;font-weight:500">${d.name}</span>
-            <span class="badge ${statusClass(d.status)}">${statusLabel(d.status)}</span>
-          </div>
-        `).join('')}
-        ${pendingDec > 5 ? `<div style="padding-top:8px;font-size:13px;color:var(--text-light)">+ ${pendingDec - 5} more</div>` : ''}
-      </div>
-    </div>` : ''}
-
-    ${unordered.length ? `
-    <div class="card">
-      <div class="card-header expanded"><h2>Materials Not Yet Ordered</h2></div>
-      <div class="card-body open">
-        ${unordered.slice(0, 8).map(m => `
-          <div style="padding:4px 0;font-size:14px;display:flex;gap:10px">
-            <span style="font-weight:500">${m.item}</span>
-            <span style="color:var(--text-light)">${m.area}</span>
-          </div>
-        `).join('')}
-        ${unordered.length > 8 ? `<div style="padding-top:6px;font-size:13px;color:var(--text-light)">+ ${unordered.length - 8} more</div>` : ''}
-      </div>
-    </div>` : ''}
-
-    <div class="card">
-      <div class="card-header expanded"><h2>Project Areas Overview</h2></div>
-      <div class="card-body open">
-        ${data.areas.map(a => {
-          const done = a.tasks.filter(t => t.done).length;
-          const tot = a.tasks.length;
-          const pct = tot > 0 ? Math.round(done / tot * 100) : 0;
-          return `
-          <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="switchTab('${a.id}')">
-            <div>
-              <span style="font-weight:500;font-size:14px">${a.name}</span>
-              <span style="color:var(--text-light);font-size:12px;margin-left:8px">${done}/${tot} tasks</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="width:80px;height:6px;background:#eee;border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:var(--accent);border-radius:3px"></div></div>
-              <span class="badge ${statusClass(a.status)}">${statusLabel(a.status)}</span>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>
+    <div class="steps">
   `;
-}
 
-// ---- Decisions ----
-// Track which decision's options are expanded and filter state
-let expandedDecisions = {};
-let optionFilters = {};
-
-function renderDecisions() {
-  return `
-    <div class="section-header">
-      <h2 style="font-size:18px">Decision Center</h2>
-      <button class="btn btn-primary btn-sm" onclick="addDecision()">+ Add Decision</button>
-    </div>
-    <p style="color:var(--text-light);font-size:13px;margin-bottom:16px">Upload photos of options you're considering. Click an image to select it as your choice.</p>
-    ${data.decisions.map((d, i) => {
-      const isExpanded = expandedDecisions[d.id] !== false; // default open
-      const filter = optionFilters[d.id] || 'all';
-      const selectedOpt = d.options.find(o => o.selected);
-      const opts = d.options.filter(o => {
-        if (filter === 'all') return true;
-        if (filter === 'favorites') return o.tag === 'favorite';
-        if (filter === 'maybe') return o.tag === 'maybe';
-        if (filter === 'rejected') return o.tag === 'rejected';
-        return true;
-      });
-      return `
-      <div class="decision-card status-${d.status}">
-        <div class="decision-header" onclick="toggleDecisionExpand('${d.id}')" style="cursor:pointer">
-          <div style="display:flex;align-items:center;gap:10px;flex:1">
-            <span class="chevron ${isExpanded?'open':''}">&#9654;</span>
-            <input class="decision-name" value="${esc(d.name)}" style="font-weight:600;font-size:15px;border:none;background:transparent;flex:1" onclick="event.stopPropagation()" onchange="updateDecision(${i},'name',this.value)">
-          </div>
-          <div style="display:flex;gap:8px;align-items:center" onclick="event.stopPropagation()">
-            ${selectedOpt ? `<span style="font-size:12px;color:var(--accent);font-weight:500">Picked: ${esc(selectedOpt.label || 'Option')}</span>` : ''}
-            <select onchange="updateDecision(${i},'status',this.value)" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px">
-              <option value="not-started" ${d.status==='not-started'?'selected':''}>Not Started</option>
-              <option value="researching" ${d.status==='researching'?'selected':''}>Researching</option>
-              <option value="chosen" ${d.status==='chosen'?'selected':''}>Chosen</option>
-            </select>
-            <button class="task-delete" onclick="deleteDecision(${i})" title="Delete">&times;</button>
-          </div>
-        </div>
-
-        ${isExpanded ? `
-        <div style="padding:14px 14px 0">
-          <!-- Visual Option Picker -->
-          <div style="margin-bottom:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <span style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-light)">
-                Options (${d.options.length})
-              </span>
-              ${d.options.length > 0 ? `
-              <div class="option-filter-btns">
-                <button class="option-filter-btn ${filter==='all'?'active':''}" onclick="setOptionFilter('${d.id}','all')">All</button>
-                <button class="option-filter-btn ${filter==='favorites'?'active':''}" onclick="setOptionFilter('${d.id}','favorites')">Favorites</button>
-                <button class="option-filter-btn ${filter==='maybe'?'active':''}" onclick="setOptionFilter('${d.id}','maybe')">Maybe</button>
-                <button class="option-filter-btn ${filter==='rejected'?'active':''}" onclick="setOptionFilter('${d.id}','rejected')">Rejected</button>
-              </div>` : ''}
-            </div>
-
-            <div class="option-grid">
-              ${opts.map((o, oi) => {
-                const realIdx = d.options.indexOf(o);
-                return `
-                <div class="option-card ${o.selected ? 'selected' : ''} ${o.tag === 'rejected' ? 'rejected' : ''} ${o.tag === 'maybe' ? 'maybe' : ''}" onclick="selectOption(${i},${realIdx})">
-                  <div class="option-actions" onclick="event.stopPropagation()">
-                    <button class="option-action-btn" onclick="deleteOption(${i},${realIdx})" title="Remove">&times;</button>
-                  </div>
-                  ${o.image ? `<img class="option-img" src="${o.image}" alt="${esc(o.label)}" onclick="event.stopPropagation();openPhotoModal(this.src)">` :
-                    `<div class="option-img-placeholder" onclick="event.stopPropagation();document.getElementById('optImg_${d.id}_${realIdx}').click()">
-                      Click to add image
-                      <input type="file" id="optImg_${d.id}_${realIdx}" class="hidden-input" accept="image/*" onchange="uploadOptionImage(${i},${realIdx},this.files[0])">
-                    </div>`}
-                  <div class="option-info">
-                    <input class="option-label" value="${esc(o.label)}" placeholder="Name this option" onclick="event.stopPropagation()" onchange="updateOption(${i},${realIdx},'label',this.value)">
-                    <input class="option-source" value="${esc(o.source || '')}" placeholder="Source / brand / link" onclick="event.stopPropagation()" onchange="updateOption(${i},${realIdx},'source',this.value)">
-                  </div>
-                  <div class="option-tags" onclick="event.stopPropagation()">
-                    <button class="option-tag ${o.tag==='favorite'?'tag-favorite':''}" onclick="toggleOptionTag(${i},${realIdx},'favorite')">Favorite</button>
-                    <button class="option-tag ${o.tag==='maybe'?'tag-maybe':''}" onclick="toggleOptionTag(${i},${realIdx},'maybe')">Maybe</button>
-                    <button class="option-tag ${o.tag==='rejected'?'tag-rejected':''}" onclick="toggleOptionTag(${i},${realIdx},'rejected')">Nope</button>
-                  </div>
-                </div>`;
-              }).join('')}
-
-              <div class="option-add-card" onclick="addOptionToDecision(${i})">
-                <span class="option-add-icon">+</span>
-                <span>Add Option</span>
-              </div>
-
-              <div class="option-add-card" onclick="document.getElementById('optBulk_${d.id}').click()">
-                <span class="option-add-icon">&#128247;</span>
-                <span>Upload Images</span>
-                <input type="file" id="optBulk_${d.id}" class="hidden-input" accept="image/*" multiple onchange="bulkUploadOptions(${i},this.files)">
-              </div>
-            </div>
-          </div>
-
-          <!-- Text fields below the visual picker -->
-          <div class="form-row" style="margin-top:12px">
-            <div class="form-group">
-              <label>Selected Value</label>
-              <input value="${esc(d.value)}" onchange="updateDecision(${i},'value',this.value)" placeholder="e.g. Charcoal Gray">
-            </div>
-            <div class="form-group" style="max-width:160px">
-              <label>Date Chosen</label>
-              <input type="date" value="${d.dateChosen}" onchange="updateDecision(${i},'dateChosen',this.value)">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Notes</label>
-            <textarea onchange="updateDecision(${i},'notes',this.value)" placeholder="Research notes, options considered...">${esc(d.notes)}</textarea>
-          </div>
-          <div style="font-size:12px;color:var(--text-light);margin-top:6px;padding-bottom:14px">
-            Affects: ${d.areas.map(a => `<span style="background:var(--bg);padding:1px 6px;border-radius:8px">${a}</span>`).join(' ')}
-            ${d.blocks.length ? ` &mdash; Blocks: ${d.blocks.map(b => `<span style="background:var(--blocked-light);color:var(--blocked);padding:1px 6px;border-radius:8px">${b}</span>`).join(' ')}` : ''}
-          </div>
-        </div>
-        ` : ''}
-      </div>`;
-    }).join('')}
-  `;
-}
-
-function toggleDecisionExpand(id) {
-  expandedDecisions[id] = expandedDecisions[id] === false ? true : (expandedDecisions[id] === undefined ? false : !expandedDecisions[id]);
-  render();
-}
-
-function setOptionFilter(decId, filter) {
-  optionFilters[decId] = filter;
-  render();
-}
-
-function addOptionToDecision(decIdx) {
-  data.decisions[decIdx].options.push({
-    id: uid(), label: '', image: '', source: '', tag: '', selected: false
-  });
-  if (data.decisions[decIdx].status === 'not-started') {
-    data.decisions[decIdx].status = 'researching';
-  }
-  saveData();
-  render();
-}
-
-function bulkUploadOptions(decIdx, files) {
-  Array.from(files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      data.decisions[decIdx].options.push({
-        id: uid(),
-        label: file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
-        image: e.target.result,
-        source: '',
-        tag: '',
-        selected: false
-      });
-      if (data.decisions[decIdx].status === 'not-started') {
-        data.decisions[decIdx].status = 'researching';
-      }
-      saveData();
-      render();
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function uploadOptionImage(decIdx, optIdx, file) {
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    data.decisions[decIdx].options[optIdx].image = e.target.result;
-    if (!data.decisions[decIdx].options[optIdx].label) {
-      data.decisions[decIdx].options[optIdx].label = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+  D.steps.forEach((s, si) => {
+    // Phase label
+    if (s.phase !== curPhase) {
+      curPhase = s.phase;
+      const pcls = { Decide: 'phase-decide', Buy: 'phase-buy', Build: 'phase-build', Contractor: 'phase-contractor', Finish: 'phase-finish' }[s.phase] || '';
+      html += `<div class="step-phase ${pcls}">${s.phase}</div>`;
     }
-    saveData();
-    render();
-  };
-  reader.readAsDataURL(file);
+
+    // Step status
+    const allChecksDone = s.checks.length > 0 && s.checks.every(c => c.done);
+    const allDecsDone = s.decisions.length === 0 || s.decisions.every(d => d.status === 'chosen');
+    const anyIP = s.checks.some(c => c.done) || s.decisions.some(d => d.status === 'researching');
+    const cls = s.done ? 'done' : (anyIP ? 'active' : '');
+
+    const isOpen = expanded[s.id] || false;
+    const checksDone = s.checks.filter(c => c.done).length;
+    const checkCount = s.checks.length;
+    const progress = checkCount > 0 ? ` (${checksDone}/${checkCount})` : '';
+
+    html += `
+      <div class="step ${cls}">
+        <div class="step-dot"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div style="flex:1;cursor:pointer" onclick="toggleStep('${s.id}')">
+            <div class="step-title">
+              ${esc(s.title)}
+              ${checkCount ? `<span style="font-size:12px;color:var(--muted);font-weight:400">${progress}</span>` : ''}
+            </div>
+            <div class="step-sub">${esc(s.sub)}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:8px">
+            <button class="toggle-btn" onclick="toggleStep('${s.id}')">${isOpen ? 'Close' : 'Open'}</button>
+            <input type="checkbox" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" ${s.done ? 'checked' : ''}
+              onchange="D.steps[${si}].done=this.checked;addLog((this.checked?'Done':'Reopened')+': '+D.steps[${si}].title);save();render()">
+          </div>
+        </div>
+
+        <div class="step-body ${isOpen ? '' : 'collapsed'}">
+    `;
+
+    // Decisions (with image options)
+    if (s.decisions.length) {
+      s.decisions.forEach((dec, di) => {
+        html += `<div class="step-section">${esc(dec.name)} ${dec.value ? '— <strong>' + esc(dec.value) + '</strong>' : ''}</div>`;
+        html += `<div class="opts">`;
+        dec.options.forEach((o, oi) => {
+          html += `
+            <div class="opt ${o.selected ? 'picked' : ''}" onclick="pickOpt(${si},${di},${oi})">
+              ${o.image ? `<img src="${o.image}" alt="${esc(o.label)}">` : ''}
+              <div>${esc(o.label) || 'Option'}</div>
+              <button class="btn-del" onclick="event.stopPropagation();D.steps[${si}].decisions[${di}].options.splice(${oi},1);save();render()" style="font-size:12px">&times;</button>
+            </div>`;
+        });
+        html += `
+          <div class="opt opt-add" onclick="addOpt(${si},${di})">+ Add Option</div>
+          <div class="opt opt-add" onclick="document.getElementById('bulkOpt_${si}_${di}').click()">Upload Images
+            <input type="file" id="bulkOpt_${si}_${di}" class="hidden" accept="image/*" multiple onchange="bulkOpt(${si},${di},this.files)">
+          </div>
+        </div>`;
+      });
+    }
+
+    // Checklist
+    if (s.checks.length) {
+      html += `<div class="step-section">Checklist</div>`;
+      s.checks.forEach((c, ci) => {
+        html += `
+          <div class="check-item">
+            <input type="checkbox" id="chk_${si}_${ci}" ${c.done ? 'checked' : ''}
+              onchange="D.steps[${si}].checks[${ci}].done=this.checked;save();render()">
+            <label for="chk_${si}_${ci}" class="${c.done ? 'done' : ''}">${esc(c.text)}</label>
+          </div>`;
+      });
+    }
+
+    // Measurements
+    if (s.measurements.length) {
+      html += `<div class="step-section">Measurements</div><div class="meas-grid">`;
+      s.measurements.forEach((m, mi) => {
+        html += `<div class="meas-item"><label>${esc(m.l)}</label><input value="${esc(m.v)}" onchange="D.steps[${si}].measurements[${mi}].v=this.value;save()"></div>`;
+      });
+      html += `</div>`;
+    }
+
+    // Notes
+    html += `<div class="step-section">Notes</div>
+      <textarea class="notes-area" style="min-height:50px" onchange="D.steps[${si}].notes=this.value;save()">${esc(s.notes)}</textarea>`;
+
+    // Photos
+    html += `<div class="step-section">Photos</div><div class="photo-grid">`;
+    (s.photos || []).forEach((p, pi) => {
+      html += `<div class="photo-wrap"><img class="photo-thumb" src="${p.src}" onclick="openModal('${p.src.replace(/'/g, "\\'")}')"><button class="photo-x" onclick="D.steps[${si}].photos.splice(${pi},1);save();render()">&times;</button></div>`;
+    });
+    html += `<div class="photo-add" onclick="document.getElementById('stepPhoto_${si}').click()">+ Photo<input type="file" id="stepPhoto_${si}" class="hidden" accept="image/*" onchange="stepPhoto(${si},this.files[0])"></div></div>`;
+
+    // Guides
+    if (s.guides.length) {
+      html += `<div class="step-section">Guides & Links</div><ul class="guide-list">`;
+      let curCat = '';
+      s.guides.forEach(g => {
+        if (g.cat && g.cat !== curCat) { curCat = g.cat; html += `<li><div class="guide-cat">${esc(g.cat)}</div></li>`; }
+        else if (!g.cat && curCat) { curCat = ''; }
+        html += `<li><a class="guide-link" href="${g.url}" target="_blank" rel="noopener">${esc(g.title)}</a></li>`;
+      });
+      html += `</ul>`;
+    }
+
+    html += `</div></div>`; // close step-body + step
+  });
+
+  html += `</div>`; // close steps
+  return html;
 }
 
-function selectOption(decIdx, optIdx) {
-  const dec = data.decisions[decIdx];
-  const wasSelected = dec.options[optIdx].selected;
-  // Deselect all
+// ---- Step interactions ----
+function toggleStep(id) { expanded[id] = !expanded[id]; render(); }
+
+function pickOpt(si, di, oi) {
+  const dec = D.steps[si].decisions[di];
+  const was = dec.options[oi].selected;
   dec.options.forEach(o => o.selected = false);
-  if (!wasSelected) {
-    // Select this one
-    dec.options[optIdx].selected = true;
-    dec.value = dec.options[optIdx].label || 'Option ' + (optIdx + 1);
+  if (!was) {
+    dec.options[oi].selected = true;
+    dec.value = dec.options[oi].label || 'Option ' + (oi + 1);
     dec.status = 'chosen';
-    dec.dateChosen = new Date().toISOString().slice(0, 10);
-    addLog(`Selected option for ${dec.name}: ${dec.value}`);
+    addLog('Picked ' + dec.name + ': ' + dec.value);
   } else {
-    // Deselected — revert to researching
-    dec.status = dec.options.length > 0 ? 'researching' : 'not-started';
     dec.value = '';
-    dec.dateChosen = '';
+    dec.status = dec.options.length ? 'researching' : 'not-started';
   }
-  saveData();
-  render();
+  save(); render();
 }
 
-function updateOption(decIdx, optIdx, field, val) {
-  data.decisions[decIdx].options[optIdx][field] = val;
-  // If this option is selected, sync the label to decision value
-  if (field === 'label' && data.decisions[decIdx].options[optIdx].selected) {
-    data.decisions[decIdx].value = val;
-  }
-  saveData();
+function addOpt(si, di) {
+  D.steps[si].decisions[di].options.push({ id: uid(), label: '', image: '', selected: false });
+  if (D.steps[si].decisions[di].status === 'not-started') D.steps[si].decisions[di].status = 'researching';
+  save(); render();
 }
 
-function toggleOptionTag(decIdx, optIdx, tag) {
-  const opt = data.decisions[decIdx].options[optIdx];
-  opt.tag = opt.tag === tag ? '' : tag;
-  saveData();
-  render();
-}
-
-function deleteOption(decIdx, optIdx) {
-  data.decisions[decIdx].options.splice(optIdx, 1);
-  saveData();
-  render();
-}
-
-function addDecision() {
-  data.decisions.push({
-    id: uid(), name: 'New Decision', status: 'not-started', value: '', notes: '', dateChosen: '', areas: [], blocks: [], options: []
-  });
-  addLog('Added new decision');
-  saveData();
-  render();
-}
-
-function updateDecision(i, field, val) {
-  const old = data.decisions[i][field];
-  data.decisions[i][field] = val;
-  if (field === 'status' && val === 'chosen' && old !== 'chosen') {
-    addLog(`Decision made: ${data.decisions[i].name} = ${data.decisions[i].value || '(set)'}`);
-  }
-  saveData();
-  if (field === 'status') render();
-}
-
-function deleteDecision(i) {
-  if (confirm('Delete this decision?')) {
-    addLog(`Deleted decision: ${data.decisions[i].name}`);
-    data.decisions.splice(i, 1);
-    saveData();
-    render();
-  }
-}
-
-// ---- Project Area ----
-function renderArea(area) {
-  const areaIdx = data.areas.findIndex(a => a.id === area.id);
-  const allTasks = getAllTasks();
-
-  return `
-    <div class="section-header">
-      <h2 style="font-size:18px">${area.name}</h2>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group" style="max-width:200px">
-        <label>Status</label>
-        <select onchange="updateArea('${area.id}','status',this.value)">
-          ${['not-started','waiting-on-decision','ready','in-progress','blocked','completed'].map(s =>
-            `<option value="${s}" ${area.status===s?'selected':''}>${statusLabel(s)}</option>`
-          ).join('')}
-        </select>
-      </div>
-      <div class="form-group" style="max-width:140px">
-        <label>Priority</label>
-        <select onchange="updateArea('${area.id}','priority',this.value)">
-          ${['high','medium','low'].map(p =>
-            `<option value="${p}" ${area.priority===p?'selected':''}>${p}</option>`
-          ).join('')}
-        </select>
-      </div>
-      <div class="form-group" style="max-width:160px">
-        <label>Assigned To</label>
-        <select onchange="updateArea('${area.id}','assignedTo',this.value)">
-          ${['homeowner','contractor','mixed'].map(a =>
-            `<option value="${a}" ${area.assignedTo===a?'selected':''}>${a}</option>`
-          ).join('')}
-        </select>
-      </div>
-    </div>
-
-    <!-- Quick Shopping Add -->
-    <div class="sub-section">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h4>Shopping List</h4>
-        <button class="btn btn-primary btn-sm" onclick="addToShoppingFromArea('${area.id}')">+ Add to Menards List</button>
-      </div>
-      ${(() => {
-        const areaItems = (data.shoppingList || []).filter(i => i.area === area.id && !i.bought);
-        if (!areaItems.length) return '<div style="color:var(--text-light);font-size:13px;margin-top:6px">No items for this area yet.</div>';
-        return areaItems.map(item => {
-          const idx = data.shoppingList.indexOf(item);
-          return '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:14px">' +
-            '<input type="checkbox" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" onchange="toggleShopItem(' + idx + ',this.checked)">' +
-            '<span>' + esc(item.name) + (item.qty ? ' <span style=\\"color:var(--text-light);font-size:12px\\">(' + esc(item.qty) + ')</span>' : '') + '</span>' +
-          '</div>';
-        }).join('');
-      })()}
-    </div>
-
-    <!-- Budget -->
-    <div class="sub-section">
-      <h4>Budget</h4>
-      <div class="form-row">
-        <div class="form-group" style="max-width:160px">
-          <label>Estimated Cost</label>
-          <input value="${esc(area.budget.estimated)}" placeholder="$0" onchange="updateAreaBudget('${area.id}','estimated',this.value)">
-        </div>
-        <div class="form-group" style="max-width:160px">
-          <label>Actual Cost</label>
-          <input value="${esc(area.budget.actual)}" placeholder="$0" onchange="updateAreaBudget('${area.id}','actual',this.value)">
-        </div>
-        <div class="form-group" style="max-width:160px">
-          <label>Vendor</label>
-          <input value="${esc(area.budget.vendor)}" placeholder="Contractor name" onchange="updateAreaBudget('${area.id}','vendor',this.value)">
-        </div>
-        <div class="form-group" style="max-width:100px;justify-content:flex-end">
-          <label><input type="checkbox" ${area.budget.paid?'checked':''} onchange="updateAreaBudget('${area.id}','paid',this.checked)"> Paid</label>
-        </div>
-      </div>
-    </div>
-
-    <!-- Measurements -->
-    <div class="sub-section">
-      <h4>Measurements</h4>
-      <div class="measurement-grid">
-        ${area.measurements.map((m, mi) => `
-          <div class="measurement-item">
-            <label>${esc(m.label)}</label>
-            <input value="${esc(m.value)}" placeholder="Enter measurement" onchange="updateMeasurement('${area.id}',${mi},this.value)">
-          </div>
-        `).join('')}
-        <div class="measurement-item" style="cursor:pointer;display:flex;align-items:center;justify-content:center;border:2px dashed var(--border)" onclick="addMeasurement('${area.id}')">
-          <span style="color:var(--text-light);font-size:13px">+ Add field</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Related Decisions -->
-    ${(() => {
-      const relDec = data.decisions.filter(d => d.areas.includes(area.id));
-      if (!relDec.length) return '';
-      return `
-      <div class="sub-section">
-        <h4>Related Decisions</h4>
-        ${relDec.map(d => `
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
-            <span style="font-size:14px">${esc(d.name)}${d.value ? ': <strong>' + esc(d.value) + '</strong>' : ''}</span>
-            <span class="badge ${statusClass(d.status)}">${statusLabel(d.status)}</span>
-          </div>
-        `).join('')}
-      </div>`;
-    })()}
-
-    <!-- Tasks -->
-    <div class="sub-section">
-      <h4>Tasks</h4>
-      <ul class="task-list">
-        ${area.tasks.map((t, ti) => {
-          const blocked = isTaskBlocked(t);
-          const blockedBy = getBlockedBy(t);
-          return `
-          <li class="task-item">
-            <input type="checkbox" class="task-check" ${t.done?'checked':''} onchange="toggleTask('${area.id}',${ti},this.checked)">
-            <div class="task-content">
-              <div class="task-name ${t.done?'done':''}" contenteditable="true" onblur="updateTask('${area.id}',${ti},'name',this.textContent)">${esc(t.name)}</div>
-              <div class="task-meta">
-                <select onchange="updateTask('${area.id}',${ti},'status',this.value)" style="font-size:11px">
-                  ${['not-started','waiting-on-decision','ready','in-progress','blocked','completed'].map(s =>
-                    `<option value="${s}" ${t.status===s?'selected':''}>${statusLabel(s)}</option>`
-                  ).join('')}
-                </select>
-                <input type="date" value="${t.targetDate||''}" style="width:130px" onchange="updateTask('${area.id}',${ti},'targetDate',this.value)">
-                ${blocked ? blockedBy.map(b => `<span class="dep-tag">blocked by: ${esc(b)}</span>`).join('') : ''}
-                ${t.deps.length && !blocked ? `<span style="font-size:11px;color:var(--accent)">deps met</span>` : ''}
-              </div>
-              <textarea class="task-notes" onblur="updateTask('${area.id}',${ti},'notes',this.value)" placeholder="Notes...">${esc(t.notes)}</textarea>
-            </div>
-            <div class="task-actions">
-              <button class="task-delete" onclick="deleteTask('${area.id}',${ti})" title="Delete">&times;</button>
-            </div>
-          </li>`;
-        }).join('')}
-      </ul>
-      <div class="add-task-row">
-        <input id="newTask_${area.id}" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTask('${area.id}')">
-        <button class="btn btn-primary btn-sm" onclick="addTask('${area.id}')">Add</button>
-      </div>
-    </div>
-
-    <!-- How-To Guides -->
-    ${area.guides && area.guides.length ? `
-    <div class="sub-section">
-      <h4>How-To Guides & Resources</h4>
-      <ul class="guide-list">
-        ${(() => {
-          const howTo = area.guides.filter(g => !g.title.startsWith('Where to Buy') && !g.title.startsWith('Inspiration'));
-          const buy = area.guides.filter(g => g.title.startsWith('Where to Buy'));
-          const inspo = area.guides.filter(g => g.title.startsWith('Inspiration'));
-          let html = '';
-          if (howTo.length) {
-            html += howTo.map(g => `<li><a class="guide-link" href="${g.url}" target="_blank" rel="noopener">${esc(g.title)}</a></li>`).join('');
-          }
-          if (buy.length) {
-            html += `<li><div class="guide-category">Where to Buy</div></li>`;
-            html += buy.map(g => `<li><a class="guide-link" href="${g.url}" target="_blank" rel="noopener">${esc(g.title.replace('Where to Buy — ', ''))}</a></li>`).join('');
-          }
-          if (inspo.length) {
-            html += `<li><div class="guide-category">Inspiration</div></li>`;
-            html += inspo.map(g => `<li><a class="guide-link" href="${g.url}" target="_blank" rel="noopener">${esc(g.title.replace('Inspiration — ', ''))}</a></li>`).join('');
-          }
-          return html;
-        })()}
-      </ul>
-    </div>` : ''}
-
-    <!-- Notes -->
-    <div class="sub-section">
-      <h4>Notes</h4>
-      <textarea style="width:100%;min-height:80px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px" onblur="updateArea('${area.id}','notes',this.value)">${esc(area.notes)}</textarea>
-    </div>
-
-    <!-- Photos -->
-    <div class="sub-section">
-      <h4>Photos</h4>
-      <div class="photo-grid">
-        ${area.photos.map((p, pi) => `
-          <div class="photo-item">
-            <button class="photo-delete" onclick="deletePhoto('${area.id}',${pi})">&times;</button>
-            <img class="photo-thumb" src="${p.data}" onclick="openPhotoModal('${p.data}')" alt="${esc(p.caption)}">
-            <input class="photo-caption" value="${esc(p.caption)}" placeholder="Caption" onchange="updatePhotoCaption('${area.id}',${pi},this.value)" style="width:120px;border:none;border-bottom:1px solid var(--border);font-size:11px;padding:2px">
-          </div>
-        `).join('')}
-        <div class="photo-upload-area" onclick="document.getElementById('photoInput_${area.id}').click()">
-          + Add Photo
-          <input type="file" id="photoInput_${area.id}" class="hidden-input" accept="image/*" multiple onchange="uploadPhotos('${area.id}',this.files)">
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function updateArea(areaId, field, val) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (area) {
-    area[field] = val;
-    if (field === 'status') addLog(`${area.name} status → ${statusLabel(val)}`);
-    saveData();
-  }
-}
-
-function updateAreaBudget(areaId, field, val) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (area) { area.budget[field] = val; saveData(); }
-}
-
-function updateMeasurement(areaId, idx, val) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (area && area.measurements[idx]) { area.measurements[idx].value = val; saveData(); }
-}
-
-function addMeasurement(areaId) {
-  const label = prompt('Measurement label:');
-  if (!label) return;
-  const area = data.areas.find(a => a.id === areaId);
-  if (area) { area.measurements.push({ label, value: '' }); saveData(); render(); }
-}
-
-function toggleTask(areaId, ti, checked) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (area && area.tasks[ti]) {
-    area.tasks[ti].done = checked;
-    area.tasks[ti].status = checked ? 'completed' : 'not-started';
-    addLog(`${checked ? 'Completed' : 'Unchecked'}: ${area.tasks[ti].name} (${area.name})`);
-    saveData();
-    render();
-  }
-}
-
-function updateTask(areaId, ti, field, val) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (area && area.tasks[ti]) { area.tasks[ti][field] = val; saveData(); }
-}
-
-function deleteTask(areaId, ti) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (area && confirm('Delete task?')) {
-    addLog(`Deleted task: ${area.tasks[ti].name} (${area.name})`);
-    area.tasks.splice(ti, 1);
-    saveData();
-    render();
-  }
-}
-
-function addTask(areaId) {
-  const input = document.getElementById('newTask_' + areaId);
-  const name = input.value.trim();
-  if (!name) return;
-  const area = data.areas.find(a => a.id === areaId);
-  if (area) {
-    area.tasks.push({ id: uid(), name, done: false, status: 'not-started', estDays: '', deps: [], notes: '', targetDate: '' });
-    addLog(`Added task: ${name} (${area.name})`);
-    input.value = '';
-    saveData();
-    render();
-  }
-}
-
-function uploadPhotos(areaId, files) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (!area) return;
-  Array.from(files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      area.photos.push({ data: e.target.result, caption: file.name });
-      addLog(`Photo added to ${area.name}: ${file.name}`);
-      saveData();
-      render();
+function bulkOpt(si, di, files) {
+  Array.from(files).forEach(f => {
+    const r = new FileReader();
+    r.onload = function(e) {
+      D.steps[si].decisions[di].options.push({
+        id: uid(), label: f.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
+        image: e.target.result, selected: false
+      });
+      if (D.steps[si].decisions[di].status === 'not-started') D.steps[si].decisions[di].status = 'researching';
+      save(); render();
     };
-    reader.readAsDataURL(file);
+    r.readAsDataURL(f);
   });
 }
 
-function deletePhoto(areaId, pi) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (area && confirm('Delete photo?')) {
-    area.photos.splice(pi, 1);
-    saveData();
-    render();
-  }
-}
-
-function updatePhotoCaption(areaId, pi, val) {
-  const area = data.areas.find(a => a.id === areaId);
-  if (area && area.photos[pi]) { area.photos[pi].caption = val; saveData(); }
-}
-
-function openPhotoModal(src) {
-  document.getElementById('photoModalImg').src = src;
-  document.getElementById('photoModal').classList.add('open');
-}
-
-function closePhotoModal() {
-  document.getElementById('photoModal').classList.remove('open');
-}
-
-// ---- Materials ----
-function renderMaterials() {
-  return `
-    <div class="section-header">
-      <h2 style="font-size:18px">Materials & Delivery</h2>
-      <button class="btn btn-primary btn-sm" onclick="addMaterial()">+ Add Item</button>
-    </div>
-    <div class="filter-bar">
-      <label>Filter by area:</label>
-      <select onchange="filterArea=this.value;render()">
-        <option value="all">All Areas</option>
-        ${data.areas.map(a => `<option value="${a.id}" ${filterArea===a.id?'selected':''}>${a.name}</option>`).join('')}
-      </select>
-    </div>
-    <div style="overflow-x:auto">
-    <table class="materials-table">
-      <thead>
-        <tr>
-          <th>Item</th><th>Area</th><th>Qty</th><th>Unit</th><th>Supplier</th><th>Supplied By</th><th>Order Status</th><th>Delivery</th><th>Needed By</th><th>Notes</th><th></th>
-        </tr>
-      </thead>
-      <tbody>
-        ${data.materials.filter(m => filterArea === 'all' || m.area === filterArea).map((m, i) => {
-          const idx = data.materials.indexOf(m);
-          return `
-          <tr>
-            <td><input value="${esc(m.item)}" onchange="updateMaterial(${idx},'item',this.value)"></td>
-            <td><select onchange="updateMaterial(${idx},'area',this.value)">
-              ${data.areas.map(a => `<option value="${a.id}" ${m.area===a.id?'selected':''}>${a.name}</option>`).join('')}
-            </select></td>
-            <td><input value="${esc(m.qty)}" style="width:60px" onchange="updateMaterial(${idx},'qty',this.value)"></td>
-            <td><input value="${esc(m.unit)}" style="width:70px" onchange="updateMaterial(${idx},'unit',this.value)"></td>
-            <td><input value="${esc(m.supplier)}" onchange="updateMaterial(${idx},'supplier',this.value)" placeholder="Store/vendor"></td>
-            <td><select onchange="updateMaterial(${idx},'suppliedBy',this.value)">
-              <option value="homeowner" ${m.suppliedBy==='homeowner'?'selected':''}>Homeowner</option>
-              <option value="contractor" ${m.suppliedBy==='contractor'?'selected':''}>Contractor</option>
-            </select></td>
-            <td><select onchange="updateMaterial(${idx},'orderStatus',this.value)">
-              <option value="not-ordered" ${m.orderStatus==='not-ordered'?'selected':''}>Not Ordered</option>
-              <option value="ordered" ${m.orderStatus==='ordered'?'selected':''}>Ordered</option>
-              <option value="received" ${m.orderStatus==='received'?'selected':''}>Received</option>
-            </select></td>
-            <td><select onchange="updateMaterial(${idx},'deliveryStatus',this.value)">
-              <option value="not-delivered" ${m.deliveryStatus==='not-delivered'?'selected':''}>Not Delivered</option>
-              <option value="in-transit" ${m.deliveryStatus==='in-transit'?'selected':''}>In Transit</option>
-              <option value="delivered" ${m.deliveryStatus==='delivered'?'selected':''}>Delivered</option>
-            </select></td>
-            <td><input type="date" value="${m.neededBy||''}" onchange="updateMaterial(${idx},'neededBy',this.value)"></td>
-            <td><input value="${esc(m.notes)}" onchange="updateMaterial(${idx},'notes',this.value)" placeholder="Notes"></td>
-            <td><button class="task-delete" onclick="deleteMaterial(${idx})">&times;</button></td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>
-    </div>
-  `;
-}
-
-function addMaterial() {
-  data.materials.push({
-    id: uid(), item: '', area: data.areas[0].id, qty: '', unit: '', supplier: '',
-    suppliedBy: 'homeowner', orderStatus: 'not-ordered', deliveryStatus: 'not-delivered', neededBy: '', notes: ''
-  });
-  saveData(); render();
-}
-
-function updateMaterial(i, field, val) {
-  data.materials[i][field] = val;
-  if (field === 'orderStatus' && val === 'ordered') addLog(`Material ordered: ${data.materials[i].item}`);
-  if (field === 'deliveryStatus' && val === 'delivered') addLog(`Material delivered: ${data.materials[i].item}`);
-  saveData();
-}
-
-function deleteMaterial(i) {
-  if (confirm('Delete material?')) {
-    data.materials.splice(i, 1);
-    saveData(); render();
-  }
+function stepPhoto(si, f) {
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = function(e) { D.steps[si].photos.push({ src: e.target.result }); save(); render(); };
+  r.readAsDataURL(f);
 }
 
 // ---- Shopping List ----
 function renderShopping() {
-  const list = data.shoppingList || [];
+  const list = D.shoppingList;
   const toBuy = list.filter(i => !i.bought);
   const bought = list.filter(i => i.bought);
-  const areas = ['general', ...data.areas.map(a => a.id)];
-  const groupByArea = toBuy.reduce((acc, item) => {
-    const key = item.area || 'general';
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
+  const groups = {};
+  toBuy.forEach(i => { const k = i.area || 'Other'; if (!groups[k]) groups[k] = []; groups[k].push(i); });
 
   return `
-    <div class="section-header">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <h2 style="font-size:18px">Menards Shopping List</h2>
-      <div style="display:flex;gap:6px">
-        ${bought.length ? `<button class="btn btn-outline btn-sm" onclick="clearBoughtItems()">Clear bought items</button>` : ''}
-        <button class="btn btn-outline btn-sm" onclick="addFromMaterials()">+ From Materials</button>
-      </div>
+      ${bought.length ? `<button class="btn btn-o btn-sm" onclick="D.shoppingList=D.shoppingList.filter(i=>!i.bought);save();render()">Clear bought</button>` : ''}
     </div>
-
-    <div class="shop-summary">
-      <span><span class="shop-count">${toBuy.length}</span> to buy</span>
-      <span style="color:var(--accent)"><span class="shop-count">${bought.length}</span> bought</span>
-      <span style="color:var(--text-light)"><span class="shop-count">${list.length}</span> total</span>
+    <div style="display:flex;gap:12px;margin-bottom:14px;font-size:14px">
+      <span><b>${toBuy.length}</b> to buy</span>
+      <span style="color:var(--accent)"><b>${bought.length}</b> bought</span>
     </div>
-
-    <div class="shop-input-row">
-      <input id="shopItemName" placeholder="Add item (e.g. 2x4 cedar boards, soffit primer)..." onkeydown="if(event.key==='Enter')addShopItem()">
-      <input id="shopItemQty" placeholder="Qty" style="max-width:70px">
-      <select id="shopItemArea">
-        <option value="general">General</option>
-        ${data.areas.map(a => `<option value="${a.id}">${a.name}</option>`).join('')}
-      </select>
-      <button class="btn btn-primary" onclick="addShopItem()">Add</button>
+    <div class="shop-input">
+      <input id="shopName" placeholder="Add item..." onkeydown="if(event.key==='Enter')addShop()">
+      <input id="shopQty" placeholder="Qty" style="max-width:70px">
+      <select id="shopArea"><option>Soffits</option><option>Awning</option><option>Deck</option><option>Other</option></select>
+      <button class="btn btn-p" onclick="addShop()">Add</button>
     </div>
-
-    <div class="card" style="padding:14px">
-      ${toBuy.length === 0 ? '<div style="color:var(--text-light);font-size:14px;padding:10px 0">Shopping list is empty. Add items above or pull from Materials.</div>' : ''}
-      ${Object.keys(groupByArea).sort().map(areaId => {
-        const areaName = areaId === 'general' ? 'General' : (data.areas.find(a => a.id === areaId)?.name || areaId);
-        const items = groupByArea[areaId];
-        return `
-          <div class="shop-group-header">${esc(areaName)} (${items.length})</div>
-          ${items.map(item => {
-            const idx = list.indexOf(item);
-            return `
-            <div class="shop-item">
-              <input type="checkbox" onchange="toggleShopItem(${idx},this.checked)">
-              <div class="shop-item-body">
-                <div class="shop-item-name">${esc(item.name)}</div>
-                <div class="shop-item-meta">
-                  ${item.qty ? `<span class="shop-qty">${esc(item.qty)}</span>` : ''}
-                  ${item.notes ? `<span>${esc(item.notes)}</span>` : ''}
-                </div>
-              </div>
-              <button class="task-delete" onclick="deleteShopItem(${idx})" title="Remove">&times;</button>
-            </div>`;
-          }).join('')}
-        `;
-      }).join('')}
-
+    <div class="card card-pad">
+      ${Object.keys(groups).map(area => `
+        <div class="shop-group">${esc(area)} (${groups[area].length})</div>
+        ${groups[area].map(item => {
+          const idx = list.indexOf(item);
+          return `<div class="shop-item">
+            <input type="checkbox" onchange="D.shoppingList[${idx}].bought=true;addLog('Bought: '+D.shoppingList[${idx}].name);save();render()">
+            <div style="flex:1">
+              <div class="shop-item-name">${esc(item.name)}</div>
+              <div class="shop-item-detail">${esc(item.qty)}${item.notes ? ' — ' + esc(item.notes) : ''}</div>
+            </div>
+            <button class="btn-del" onclick="D.shoppingList.splice(${idx},1);save();render()">&times;</button>
+          </div>`;
+        }).join('')}
+      `).join('')}
       ${bought.length ? `
-        <div class="shop-group-header" style="color:var(--accent)">Bought (${bought.length})</div>
+        <div class="shop-group" style="color:var(--accent)">Bought (${bought.length})</div>
         ${bought.map(item => {
           const idx = list.indexOf(item);
-          return `
-          <div class="shop-item" style="opacity:0.6">
-            <input type="checkbox" checked onchange="toggleShopItem(${idx},this.checked)">
-            <div class="shop-item-body">
-              <div class="shop-item-name bought">${esc(item.name)}</div>
-              <div class="shop-item-meta">
-                ${item.qty ? `<span class="shop-qty">${esc(item.qty)}</span>` : ''}
-                <span class="shop-area-badge">${item.area === 'general' ? 'General' : (data.areas.find(a => a.id === item.area)?.name || item.area)}</span>
-              </div>
-            </div>
-            <button class="task-delete" onclick="deleteShopItem(${idx})">&times;</button>
+          return `<div class="shop-item" style="opacity:.5">
+            <input type="checkbox" checked onchange="D.shoppingList[${idx}].bought=false;save();render()">
+            <div style="flex:1"><div class="shop-item-name bought">${esc(item.name)}</div></div>
+            <button class="btn-del" onclick="D.shoppingList.splice(${idx},1);save();render()">&times;</button>
           </div>`;
         }).join('')}
       ` : ''}
@@ -1992,247 +678,60 @@ function renderShopping() {
   `;
 }
 
-function addShopItem() {
-  const nameEl = document.getElementById('shopItemName');
-  const qtyEl = document.getElementById('shopItemQty');
-  const areaEl = document.getElementById('shopItemArea');
-  const name = nameEl.value.trim();
-  if (!name) return;
-  data.shoppingList.push({
-    id: uid(),
-    name: name,
-    qty: qtyEl.value.trim(),
-    area: areaEl.value,
-    bought: false,
-    notes: ''
-  });
-  addLog('Added to shopping list: ' + name);
-  nameEl.value = '';
-  qtyEl.value = '';
-  saveData();
-  render();
-}
-
-function toggleShopItem(idx, checked) {
-  if (data.shoppingList[idx]) {
-    data.shoppingList[idx].bought = checked;
-    if (checked) addLog('Bought: ' + data.shoppingList[idx].name);
-    saveData();
-    render();
-  }
-}
-
-function deleteShopItem(idx) {
-  data.shoppingList.splice(idx, 1);
-  saveData();
-  render();
-}
-
-function clearBoughtItems() {
-  data.shoppingList = data.shoppingList.filter(i => !i.bought);
-  saveData();
-  render();
-}
-
-function addFromMaterials() {
-  // Pull unordered, homeowner-supplied materials into shopping list
-  const existing = new Set(data.shoppingList.map(i => i.name.toLowerCase()));
-  let added = 0;
-  data.materials.forEach(m => {
-    if (m.suppliedBy === 'homeowner' && m.orderStatus === 'not-ordered' && !existing.has(m.item.toLowerCase())) {
-      data.shoppingList.push({
-        id: uid(),
-        name: m.item,
-        qty: m.qty ? m.qty + (m.unit ? ' ' + m.unit : '') : '',
-        area: m.area,
-        bought: false,
-        notes: m.notes || ''
-      });
-      added++;
-    }
-  });
-  if (added) {
-    addLog(`Added ${added} items from Materials to shopping list`);
-    saveData();
-  }
-  render();
-}
-
-// Also allow adding to shopping list from within area sections
-function addToShoppingFromArea(areaId) {
-  const name = prompt('Item to buy at Menards:');
-  if (!name) return;
-  const qty = prompt('Quantity (optional):') || '';
-  data.shoppingList.push({
-    id: uid(),
-    name: name,
-    qty: qty,
-    area: areaId,
-    bought: false,
-    notes: ''
-  });
-  addLog('Added to shopping list: ' + name);
-  saveData();
-  render();
+function addShop() {
+  const n = document.getElementById('shopName'), q = document.getElementById('shopQty'), a = document.getElementById('shopArea');
+  if (!n.value.trim()) return;
+  D.shoppingList.push({ id: uid(), name: n.value.trim(), qty: q.value.trim(), area: a.value, bought: false, notes: '' });
+  addLog('Added to list: ' + n.value.trim());
+  n.value = ''; q.value = '';
+  save(); render();
 }
 
 // ---- Notes & Photos ----
 function renderNotes() {
   return `
-    <h2 style="font-size:18px;margin-bottom:16px">Notes & Photos</h2>
-    <div class="card">
-      <div class="card-header expanded"><h2>Global Notes</h2></div>
-      <div class="card-body open">
-        <textarea style="width:100%;min-height:200px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;line-height:1.6" onblur="data.globalNotes=this.value;saveData()">${esc(data.globalNotes)}</textarea>
-      </div>
+    <h2 style="font-size:18px;margin-bottom:12px">Notes & Photos</h2>
+    <div class="card card-pad">
+      <textarea class="notes-area" onchange="D.globalNotes=this.value;save()">${esc(D.globalNotes)}</textarea>
     </div>
-    <div class="card">
-      <div class="card-header expanded"><h2>All Photos</h2></div>
-      <div class="card-body open">
-        <div class="photo-grid">
-          ${data.areas.flatMap(a => a.photos.map((p, pi) => `
-            <div class="photo-item">
-              <img class="photo-thumb" src="${p.data}" onclick="openPhotoModal('${p.data}')">
-              <div class="photo-caption"><strong>${a.name}</strong><br>${esc(p.caption)}</div>
-            </div>
-          `)).join('') || '<div style="color:var(--text-light);font-size:14px">No photos yet. Add photos from each project area tab.</div>'}
-        </div>
+    <div class="card card-pad">
+      <div style="font-weight:600;margin-bottom:8px">Photos</div>
+      <div class="photo-grid">
+        ${(D.globalPhotos||[]).map((p,i) => `<div class="photo-wrap"><img class="photo-thumb" src="${p.src}" onclick="openModal('${p.src.replace(/'/g, "\\'")}')"><button class="photo-x" onclick="D.globalPhotos.splice(${i},1);save();render()">&times;</button></div>`).join('')}
+        <div class="photo-add" onclick="document.getElementById('gPhoto').click()">+ Photo<input type="file" id="gPhoto" class="hidden" accept="image/*" onchange="gPhotoUp(this.files[0])"></div>
       </div>
     </div>
   `;
 }
-
-// ---- Timeline ----
-function renderTimeline() {
-  // Build the detailed step-by-step sequence
-  const steps = [
-    // PHASE 1: DECISIONS
-    { phase: 'Decide', title: 'Pick soffit paint color', sub: 'Coordinate with house trim and siding', taskIds: ['soffit-color'], decIds: ['d4'], type: 'decide' },
-    { phase: 'Decide', title: 'Choose eyebrow awning design + dimensions', sub: 'Style, material, measure the garage opening', taskIds: ['awning-design', 'awning-measure'], decIds: ['d5', 'd6'], type: 'decide' },
-    { phase: 'Decide', title: 'Finalize deck repair scope', sub: 'Which boards, rails — what gets replaced vs patched', taskIds: ['deck-assess', 'deck-scope'], decIds: ['d7'], type: 'decide' },
-
-    // PHASE 2: SHOPPING — one trip
-    { phase: 'Buy', title: 'Menards run — buy everything at once', sub: 'Sprayer, ladder, paint, lumber, deck boards, hardware — one trip', taskIds: [], decIds: [], type: 'buy', link: 'shopping' },
-
-    // PHASE 3: DIY WORK
-    { phase: 'Build', title: 'Prep + paint soffits', sub: 'Clean, sand, mask, prime, spray 2 coats. Do before awning.', taskIds: ['soffit-prep', 'soffit-paint'], decIds: [], type: 'build' },
-    { phase: 'Build', title: 'Build + install eyebrow awning', sub: 'Ledger, rafters, flash it. Must be done before siding.', taskIds: ['awning-fab', 'awning-install'], decIds: [], type: 'build' },
-    { phase: 'Build', title: 'Deck work near house walls', sub: 'Any sections that affect wall access — before siding crew arrives', taskIds: ['deck-access'], decIds: [], type: 'build' },
-
-    // PHASE 4: CONTRACTOR
-    { phase: 'Contractor', title: 'Roof + siding + gutters', sub: 'Contractor handles all three. Covered by insurance.', taskIds: ['roof-install', 'siding-install', 'gutter-install'], decIds: [], type: 'contractor' },
-
-    // PHASE 5: FINISH
-    { phase: 'Finish', title: 'Deck repair + stain', sub: 'Replace boards, sand, clean, stain everything', taskIds: ['deck-repair', 'deck-finish'], decIds: [], type: 'build' },
-    { phase: 'Finish', title: 'Final walkthrough', sub: 'Touch-ups, cleanup, done', taskIds: [], decIds: [], type: 'decide' },
-  ];
-
-  // Determine status of each step
-  const at = getAllTasks();
-  steps.forEach(s => {
-    const tasks = s.taskIds.map(id => at.find(t => t.id === id)).filter(Boolean);
-    const decs = s.decIds.map(id => data.decisions.find(d => d.id === id)).filter(Boolean);
-
-    const allTasksDone = tasks.length === 0 || tasks.every(t => t.done);
-    const allDecsDone = decs.length === 0 || decs.every(d => d.status === 'chosen');
-    const anyTaskIP = tasks.some(t => t.status === 'in-progress');
-    const anyDecIP = decs.some(d => d.status === 'researching');
-    const anyBlocked = tasks.some(t => isTaskBlocked(t));
-
-    if (allTasksDone && allDecsDone) s.state = 'done';
-    else if (anyBlocked) { s.state = 'blocked'; s.blockedBy = tasks.flatMap(t => getBlockedBy(t)).filter((v,i,a) => a.indexOf(v) === i); }
-    else if (anyTaskIP || anyDecIP) s.state = 'active';
-    else s.state = 'pending';
-  });
-
-  let currentPhase = '';
-
-  return `
-    <h2 style="font-size:18px;margin-bottom:6px">Project Timeline</h2>
-    <p style="color:var(--text-light);font-size:13px;margin-bottom:20px">Step-by-step sequence. Do these in order, top to bottom.</p>
-    <div class="steps">
-      ${steps.map((s, i) => {
-        let phaseHTML = '';
-        if (s.phase !== currentPhase) {
-          currentPhase = s.phase;
-          const pcls = s.type === 'buy' ? 'phase-buy' : s.type === 'build' ? 'phase-build' : s.type === 'contractor' ? 'phase-contractor' : '';
-          phaseHTML = `<div class="step-phase ${pcls}">${s.phase}</div>`;
-        }
-        const cls = s.state === 'done' ? 'done' : s.state === 'active' ? 'active' : s.state === 'blocked' ? 'blocked' : '';
-        const click = s.link ? `onclick="switchTab('${s.link}')" style="cursor:pointer"` :
-                      s.area ? `onclick="switchTab('${s.area}')" style="cursor:pointer"` :
-                      s.taskIds.length && at.find(t => t.id === s.taskIds[0]) ? `onclick="switchTab('${at.find(t => t.id === s.taskIds[0]).areaId}')" style="cursor:pointer"` :
-                      s.decIds.length ? `onclick="switchTab('decisions')" style="cursor:pointer"` : '';
-        return `
-          ${phaseHTML}
-          <div class="step ${cls}" ${click}>
-            <div class="step-dot"></div>
-            <div class="step-title">${esc(s.title)}</div>
-            <div class="step-sub">${esc(s.sub)}</div>
-            ${s.state === 'blocked' && s.blockedBy ? `<div class="step-blocked-note">Waiting on: ${s.blockedBy.join(', ')}</div>` : ''}
-          </div>`;
-      }).join('')}
-    </div>
-  `;
-}
+function gPhotoUp(f) { if(!f)return; const r=new FileReader(); r.onload=function(e){D.globalPhotos.push({src:e.target.result});save();render()};r.readAsDataURL(f); }
 
 // ---- Activity Log ----
-function renderActivityLog() {
+function renderLog() {
   return `
-    <div class="section-header">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <h2 style="font-size:18px">Activity Log</h2>
-      <button class="btn btn-outline btn-sm" onclick="data.activityLog=[];saveData();render()">Clear Log</button>
+      <button class="btn btn-o btn-sm" onclick="D.log=[];save();render()">Clear</button>
     </div>
-    <div class="activity-log">
-      ${data.activityLog.length ? data.activityLog.map(e => `
-        <div class="log-entry">
-          <span class="log-date">${e.date}</span>
-          <span>${esc(e.msg)}</span>
-        </div>
-      `).join('') : '<div style="color:var(--text-light);font-size:14px;padding:20px 0">No activity yet. Changes will be logged here.</div>'}
+    <div class="card card-pad">
+      ${D.log.length ? D.log.map(e => `<div style="padding:4px 0;border-bottom:1px solid var(--border);font-size:13px;display:flex;gap:8px"><span style="color:var(--muted);font-size:12px;white-space:nowrap;flex-shrink:0">${e.d}</span><span>${esc(e.m)}</span></div>`).join('') : '<div style="color:var(--muted)">No activity yet</div>'}
     </div>
   `;
 }
 
+// ---- Modal ----
+function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
 // ---- Export / Import ----
-function exportData() {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'renovation-planner-' + new Date().toISOString().slice(0, 10) + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
+function exportJSON() {
+  const b = new Blob([JSON.stringify(D, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'renovation_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
 }
-
-function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const imported = JSON.parse(e.target.result);
-      if (imported.areas && imported.decisions) {
-        data = imported;
-        saveData();
-        addLog('Data imported from file');
-        render();
-        alert('Data imported successfully.');
-      } else {
-        alert('Invalid file format.');
-      }
-    } catch(err) {
-      alert('Error reading file: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
-
-// ---- Escape HTML ----
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function importJSON(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader(); r.onload = function(ev) {
+    try { D = JSON.parse(ev.target.result); save(); render(); alert('Imported'); } catch(err) { alert('Invalid file'); }
+  }; r.readAsText(f);
 }
 
 // ---- Init ----
